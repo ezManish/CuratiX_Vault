@@ -1,0 +1,27 @@
+# ======== General ========
+.env
+*.env.local
+*.env.*.local
+.DS_Store
+Thumbs.db
+
+# ======== Backend ========
+backend/target/
+backend/*.jar
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+backend/src/main/resources/firebase-adminsdk.json
+
+# ======== Frontend ========
+frontend/node_modules/
+frontend/dist/
+
+# ======== IDE ========
+.idea/
+.vscode/
+*.iml
+*.swp
+*~
+
+ca.pem 
