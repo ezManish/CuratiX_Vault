@@ -9,6 +9,7 @@ import {
   Image, Code2, ArrowLeft, Phone
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
+import { createPortal } from 'react-dom';
 
 type TabId = 'overview' | 'members' | 'files' | 'settings';
 
@@ -242,7 +243,7 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
         {stats.map(stat => (
           <div
             key={stat.label}
-            className="glass-card"
+            className="card"
             onClick={() => setActiveTab(stat.tab)}
             style={{ padding: 24, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 20 }}
           >
@@ -262,7 +263,7 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
 
         {/* Result Badge Card */}
         {board.result && (
-          <div className="glass-card" style={{ padding: 24, display: 'flex', alignItems: 'center', gap: 20 }}>
+          <div className="card" style={{ padding: 24, display: 'flex', alignItems: 'center', gap: 20 }}>
              <div style={{
               width: 52, height: 52, borderRadius: 16,
               background: `${resultColors[board.result] || '#94a3b8'}15`,
@@ -288,7 +289,7 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
         {/* Left Column: Project Details */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           {/* Section 1: Problem & Solution */}
-          <div className="glass-card" style={{ padding: 28 }}>
+          <div className="card" style={{ padding: 28 }}>
              <h3 style={{ fontSize: 14, fontWeight: 800, marginBottom: 20, color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
                <FileText size={18} /> PROJECT MISSION
              </h3>
@@ -313,7 +314,7 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
 
           {/* Section 2: Links and Resources */}
           {(board.submissionUrl || board.repoUrl) && (
-            <div className="glass-card" style={{ padding: 28 }}>
+            <div className="card" style={{ padding: 28 }}>
                <h3 style={{ fontSize: 14, fontWeight: 800, marginBottom: 20, color: '#10b981', display: 'flex', alignItems: 'center', gap: 10 }}>
                  <Link2 size={18} /> RESOURCES & LINKS
                </h3>
@@ -334,7 +335,7 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
 
           {/* Section 3: Notes */}
           {board.notes && (
-            <div className="glass-card" style={{ padding: 28 }}>
+            <div className="card" style={{ padding: 28 }}>
                <h3 style={{ fontSize: 14, fontWeight: 800, marginBottom: 12, color: '#94a3b8' }}>INTERNAL NOTES</h3>
                <p style={{ fontSize: 14, color: 'var(--color-text-secondary)', whiteSpace: 'pre-wrap' }}>{board.notes}</p>
             </div>
@@ -343,7 +344,7 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
 
         {/* Right Column: Meta Info */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-          <div className="glass-card" style={{ padding: 24 }}>
+          <div className="card" style={{ padding: 24 }}>
             <h3 style={{ fontSize: 13, fontWeight: 800, marginBottom: 20, letterSpacing: '0.05em', color: 'var(--color-text-muted)' }}>HACKATHON CONTEXT</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
                <div style={{ display: 'flex', gap: 12 }}>
@@ -389,10 +390,9 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
           </div>
           
           {board.prize && (
-            <div className="glass-card" style={{ 
+            <div className="card" style={{ 
               padding: 24, 
-              background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.1), transparent)',
-              border: '1px solid rgba(74, 222, 128, 0.2)'
+              borderColor: 'rgba(74, 222, 128, 0.3)'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#4ade80', marginBottom: 8 }}>
                 <Trophy size={18} />
@@ -533,7 +533,7 @@ function MembersTab({
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 14 }}>
           {filtered.map((m: any) => (
-            <div key={m.id} className="glass-card" style={{ padding: 20 }}>
+            <div key={m.id} className="card" style={{ padding: 20 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                 <div style={{
                   width: 40, height: 40, borderRadius: '50%',
@@ -620,7 +620,7 @@ function MembersTab({
       )}
 
       {/* Add Member Modal */}
-      {showAddMember && (
+      {showAddMember && createPortal(
         <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowAddMember(false); }}>
           <div className="modal-content">
             <div className="modal-header">
@@ -663,7 +663,8 @@ function MembersTab({
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
@@ -747,7 +748,7 @@ function FilesTab({ boardId, files, canEdit, showUploadFile, setShowUploadFile, 
             const Icon = typeIcons[f.fileType] || FolderOpen;
             const color = typeColors[f.fileType] || '#6b7280';
             return (
-              <div key={f.id} className="glass-card" style={{ padding: 20 }}>
+              <div key={f.id} className="card" style={{ padding: 20 }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                   <div style={{
                     width: 40, height: 40, borderRadius: 'var(--radius-sm)',
@@ -770,9 +771,33 @@ function FilesTab({ boardId, files, canEdit, showUploadFile, setShowUploadFile, 
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
-                  <a href={f.cloudinaryUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost" style={{ fontSize: 12 }}>
+                  <button
+                    className="btn-ghost"
+                    style={{ fontSize: 12 }}
+                    onClick={async () => {
+                      try {
+                        // Determine filename with extension
+                        const filename = f.originalFilename || f.label || 'download';
+                        // Use fl_attachment on Cloudinary to get correct Content-Type
+                        const url = (f.cloudinaryUrl || '').replace('/upload/', '/upload/fl_attachment/');
+                        // Fetch as blob to bypass cross-origin download attribute restriction
+                        const res = await fetch(url);
+                        const blob = await res.blob();
+                        const blobUrl = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = blobUrl;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(blobUrl);
+                      } catch {
+                        toast.error('Download failed. Try opening in a new tab.');
+                      }
+                    }}
+                  >
                     <Download size={13} /> Download
-                  </a>
+                  </button>
                   {canEdit && (
                     <button className="btn-ghost" style={{ fontSize: 12, color: '#ef4444' }} onClick={() => handleDelete(f.id)}>
                       <Trash2 size={13} />
@@ -786,7 +811,7 @@ function FilesTab({ boardId, files, canEdit, showUploadFile, setShowUploadFile, 
       )}
 
       {/* Upload Modal */}
-      {showUploadFile && (
+      {showUploadFile && createPortal(
         <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowUploadFile(false); }}>
           <div className="modal-content">
             <div className="modal-header">
@@ -832,7 +857,8 @@ function FilesTab({ boardId, files, canEdit, showUploadFile, setShowUploadFile, 
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
@@ -903,7 +929,7 @@ function SettingsTab({ boardId, board, isOwner, onDeleteBoard, onReload }: any) 
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, maxWidth: 800 }}>
       {/* Board/Project Details Form */}
       {isOwner && (
-        <div className="glass-card" style={{ padding: 28 }}>
+        <div className="card" style={{ padding: 28 }}>
           <h3 style={{ fontSize: 18, fontWeight: 800, marginBottom: 24, color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
             <Settings size={20} /> Project Settings
           </h3>
@@ -975,7 +1001,7 @@ function SettingsTab({ boardId, board, isOwner, onDeleteBoard, onReload }: any) 
       )}
 
       {/* Invite Section */}
-      <div className="glass-card" style={{ padding: 24 }}>
+      <div className="card" style={{ padding: 24 }}>
         <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
           <Link2 size={18} /> Collaborators
         </h3>
@@ -1023,7 +1049,7 @@ function SettingsTab({ boardId, board, isOwner, onDeleteBoard, onReload }: any) 
 
       {/* Danger Zone */}
       {isOwner && (
-        <div className="glass-card" style={{
+        <div className="card" style={{
           padding: 24,
           borderColor: 'rgba(239, 68, 68, 0.2)',
         }}>

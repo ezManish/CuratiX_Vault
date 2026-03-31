@@ -11,7 +11,6 @@ import {
   Link2, 
   FileText, 
   IdCard, 
-  CheckCircle2, 
   ArrowLeft,
   Loader2
 } from 'lucide-react';
@@ -83,29 +82,35 @@ export default function ProfilePage() {
     <div className="max-w-4xl mx-auto py-8 px-4 animate-fade-in text-white">
       <button 
         onClick={() => navigate('/dashboard')}
-        className="flex items-center gap-2 text-indigo-400 hover:text-indigo-300 transition-colors mb-8 group"
+        className="flex items-center gap-2 text-indigo-400 hover:text-indigo-300 transition-colors group"
+        style={{ marginBottom: 32 }}
       >
         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
         Back to Dashboard
       </button>
 
-      <div className="flex flex-col md:flex-row gap-8 items-start mb-12">
-        <div className="relative group">
-          <div className="w-32 h-32 rounded-3xl overflow-hidden glass border-2 border-white/20 shadow-2xl relative">
-            <img 
-              src={dbUser?.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.displayName)}&background=6366f1&color=fff`} 
-              alt="Profile" 
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="absolute -bottom-2 -right-2 bg-indigo-500 p-2 rounded-xl shadow-lg border-2 border-white/10">
-            <CheckCircle2 size={18} className="text-white" />
+      <div className="flex flex-col md:flex-row gap-8 items-center" style={{ marginBottom: 48 }}>
+        <div className="relative group" style={{ marginTop: 8 }}>
+          {/* Glowing border ring */}
+          <div style={{
+            padding: 3,
+            borderRadius: 20,
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.15) 100%)',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.08)',
+          }}>
+            <div style={{ width: 120, height: 120, borderRadius: 16, overflow: 'hidden' }}>
+              <img 
+                src={dbUser?.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.displayName)}&background=18181b&color=fff`} 
+                alt="Profile" 
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
+            </div>
           </div>
         </div>
 
         <div className="flex-1">
-          <h1 className="text-4xl font-extrabold mb-2 tracking-tight">
-            User <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Settings</span>
+          <h1 className="text-3xl font-bold mb-2 tracking-tight text-text">
+            User Settings
           </h1>
           <p className="text-slate-400 max-w-lg">
             This is your global profile. Details you provide here will be automatically sync'd to team boards when you join.
@@ -113,11 +118,11 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
         {/* Basic Info */}
-        <div className="glass p-8 rounded-[2rem] border border-white/10 space-y-6">
-          <h2 className="text-xl font-bold flex items-center gap-2 mb-4">
-            <User size={20} className="text-indigo-400" />
+        <div className="card" style={{ padding: 40, display: 'flex', flexDirection: 'column', gap: 32 }}>
+          <h2 className="text-lg font-bold flex items-center gap-2 mb-4 text-text">
+            <User size={18} className="text-text-secondary" />
             General Information
           </h2>
           
@@ -168,9 +173,9 @@ export default function ProfilePage() {
         </div>
 
         {/* Contact & Professional */}
-        <div className="glass p-8 rounded-[2rem] border border-white/10 space-y-6">
-          <h2 className="text-xl font-bold flex items-center gap-2 mb-4">
-            <Link2 size={20} className="text-indigo-400" />
+        <div className="card" style={{ padding: 40, display: 'flex', flexDirection: 'column', gap: 32 }}>
+          <h2 className="text-lg font-bold flex items-center gap-2 mb-4 text-text">
+            <Link2 size={18} className="text-text-secondary" />
             Links & Reach
           </h2>
           
@@ -215,9 +220,9 @@ export default function ProfilePage() {
         </div>
 
         {/* Bio */}
-        <div className="glass p-8 rounded-[2rem] border border-white/10 space-y-6">
-          <h2 className="text-xl font-bold flex items-center gap-2 mb-4">
-            <FileText size={20} className="text-indigo-400" />
+        <div className="card" style={{ padding: 40, display: 'flex', flexDirection: 'column', gap: 32 }}>
+          <h2 className="text-lg font-bold flex items-center gap-2 mb-4 text-text">
+            <FileText size={18} className="text-text-secondary" />
             Biography
           </h2>
           <div className="space-y-2">
@@ -232,47 +237,24 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-4 pb-12">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12, paddingBottom: 48 }}>
           <button 
             type="button"
             onClick={() => navigate('/dashboard')}
-            className="px-8 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all font-medium"
+            className="btn-secondary"
           >
             Cancel
           </button>
           <button 
             type="submit"
             disabled={loading}
-            className="btn-primary px-12 py-3 rounded-2xl flex items-center gap-2 shadow-xl hover:shadow-indigo-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-primary"
+            style={{ padding: '10px 24px', fontSize: 14 }}
           >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Save Changes'}
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save Changes'}
           </button>
         </div>
       </form>
-
-      {/* Global CSS for input-field if not exists */}
-      <style>{`
-        .input-field {
-          width: 100%;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 1rem;
-          padding: 0.75rem 1rem;
-          color: white;
-          transition: all 0.2s;
-          outline: none;
-        }
-        .input-field:focus {
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(99, 102, 241, 0.5);
-          box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-        }
-        .glass {
-          background: rgba(255, 255, 255, 0.03);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-        }
-      `}</style>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import DashboardPage from './pages/DashboardPage';
 import BoardPage from './pages/BoardPage';
 import ProfilePage from './pages/ProfilePage';
 import InviteJoinPage from './pages/InviteJoinPage';
+import LandingPage from './pages/LandingPage';
 import { Toaster } from 'react-hot-toast';
 import './index.css';
 
@@ -32,6 +33,7 @@ function AppRoutes() {
   return (
     <Routes>
       {/* Public routes */}
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/invite/:token" element={<InviteJoinPage />} />
 
@@ -47,7 +49,7 @@ function AppRoutes() {
       </Route>
 
       {/* Default redirect */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { boardsApi, invitationsApi } from '../api/endpoints';
-import { Plus, Users, User, Trophy, FolderOpen, ChevronRight, Layers, Check, X, Bell, Layout } from 'lucide-react';
+import { Plus, Users, User, FolderOpen, ChevronRight, Layers, Check, X, Bell, Layout } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { createPortal } from 'react-dom';
 
 interface Board {
   id: number;
@@ -27,6 +28,7 @@ interface Board {
 }
 
 interface NewBoardState {
+  [key: string]: string;
   name: string;
   description: string;
   coverColor: string;
@@ -138,7 +140,7 @@ export default function DashboardPage() {
         marginBottom: 32,
       }}>
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>
+          <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.04em', marginBottom: 4 }}>
             Welcome back{dbUser?.displayName ? `, ${dbUser.displayName.split(' ')[0]}` : ''}
           </h1>
           <p style={{ color: 'var(--color-text-muted)', fontSize: 15 }}>
@@ -153,22 +155,21 @@ export default function DashboardPage() {
 
       {/* Profile Incomplete Prompt */}
       {!dbUser?.admissionNo && (
-        <div className="glass-card animate-slide-up" style={{
-          padding: '20px 24px',
+        <div className="card animate-slide-up" style={{
+          padding: '24px',
           marginBottom: 32,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          background: 'linear-gradient(90deg, rgba(99,102,241,0.05), rgba(139,92,246,0.05))',
-          border: '1px solid rgba(99,102,241,0.2)',
-          borderRadius: 24,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <div style={{
-              width: 48, height: 48, borderRadius: 16,
-              background: 'rgba(99,102,241,0.1)',
+              width: 56, height: 56, borderRadius: 'var(--radius-lg)',
+              background: 'var(--color-bg-secondary)',
+              border: '1px solid var(--color-border)',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#818cf8'
+              color: 'var(--color-primary)'
             }}>
               <User size={24} />
             </div>
@@ -198,16 +199,13 @@ export default function DashboardPage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: 16 }}>
             {invitations.map(invite => (
-              <div key={invite.id} className="glass-card" style={{ 
-                padding: 20, border: '1px solid rgba(245,158,11,0.3)',
-                background: 'linear-gradient(135deg, rgba(245,158,11,0.05), transparent)'
-              }}>
+              <div key={invite.id} className="card" style={{ padding: 20 }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
                   <div style={{
-                    width: 44, height: 44, borderRadius: 12,
-                    background: `${invite.board?.coverColor || '#6366f1'}20`,
+                    width: 44, height: 44, borderRadius: 'var(--radius-md)',
+                    background: 'var(--color-surface)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 20, border: `1px solid ${invite.board?.coverColor || '#6366f1'}30`
+                    fontSize: 20, border: '1px solid var(--color-border)'
                   }}>
                     {invite.board?.coverEmoji || '📋'}
                   </div>
@@ -259,12 +257,12 @@ export default function DashboardPage() {
           </button>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 24 }}>
           {boards.map((board, idx) => (
             <Link
               key={board.id}
               to={`/boards/${board.id}`}
-              className="glass-card"
+              className="card"
               style={{
                 padding: 24,
                 textDecoration: 'none',
@@ -277,18 +275,18 @@ export default function DashboardPage() {
             >
               {/* Color accent bar */}
               <div style={{
-                position: 'absolute', top: 0, left: 0, right: 0, height: 3,
-                background: `linear-gradient(90deg, ${board.coverColor || '#6366f1'}, transparent)`,
+                position: 'absolute', top: 0, left: 0, right: 0, height: 4,
+                background: board.coverColor || '#ffffff',
               }} />
 
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                 <div style={{
                   width: 44, height: 44,
                   borderRadius: 'var(--radius-md)',
-                  background: `${board.coverColor || '#6366f1'}20`,
+                  background: 'var(--color-surface)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 22,
-                  border: `1px solid ${board.coverColor || '#6366f1'}30`,
+                  border: '1px solid var(--color-border)',
                 }}>
                   {board.coverEmoji || '📋'}
                 </div>
@@ -343,7 +341,7 @@ export default function DashboardPage() {
       )}
 
       {/* Create Board Modal */}
-      {showCreate && (
+      {showCreate && createPortal(
         <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowCreate(false); }}>
           <div className="modal-content" style={{ maxWidth: 640 }}>
             <div className="modal-header">
@@ -355,21 +353,20 @@ export default function DashboardPage() {
               </div>
               <button 
                 className="btn-ghost" 
-                style={{ position: 'absolute', top: 24, right: 24, fontSize: 20 }} 
+                style={{ fontSize: 20 }} 
                 onClick={() => setShowCreate(false)}
               >
                 ✕
               </button>
             </div>
             <form onSubmit={handleCreate}>
-              <div className="modal-body" style={{ maxHeight: '72vh', overflowY: 'auto', padding: '10px 32px 32px 32px' }}>
+              <div className="modal-body">
                 
                 {/* Identity */}
                 <div style={{ marginBottom: 32 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18, color: '#818cf8' }}>
-                    <Layout size={18} />
-                    <h3 style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.05em' }}>PROJECT IDENTITY</h3>
-                    <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, rgba(129,140,248,0.2), transparent)' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18, color: 'var(--color-text)' }}>
+                    <h3 style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.08em', fontFamily: 'JetBrains Mono, monospace' }}>PROJECT IDENTITY</h3>
+                    <div style={{ flex: 1, height: 1, background: 'var(--color-border)' }} />
                   </div>
                   
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
@@ -406,10 +403,9 @@ export default function DashboardPage() {
 
                 {/* Logistics */}
                 <div style={{ marginBottom: 32 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18, color: '#f59e0b' }}>
-                    <Trophy size={18} />
-                    <h3 style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.05em' }}>DATE & VENUE</h3>
-                    <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, rgba(245,158,11,0.2), transparent)' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18, color: 'var(--color-text)' }}>
+                    <h3 style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.08em', fontFamily: 'JetBrains Mono, monospace' }}>DATE & VENUE</h3>
+                    <div style={{ flex: 1, height: 1, background: 'var(--color-border)' }} />
                   </div>
                   
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
@@ -436,10 +432,9 @@ export default function DashboardPage() {
 
                 {/* Team Info */}
                 <div style={{ marginBottom: 32 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18, color: '#10b981' }}>
-                    <Users size={18} />
-                    <h3 style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.05em' }}>TEAM & VISION</h3>
-                    <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, rgba(16,185,129,0.2), transparent)' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18, color: 'var(--color-text)' }}>
+                    <h3 style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.08em', fontFamily: 'JetBrains Mono, monospace' }}>TEAM & VISION</h3>
+                    <div style={{ flex: 1, height: 1, background: 'var(--color-border)' }} />
                   </div>
                   
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20 }}>
@@ -492,7 +487,7 @@ export default function DashboardPage() {
                 </div>
 
               </div>
-              <div className="modal-footer" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '24px 32px' }}>
+              <div className="modal-footer">
                 <button type="button" className="btn-secondary" onClick={() => setShowCreate(false)}>
                   Cancel
                 </button>
@@ -502,7 +497,8 @@ export default function DashboardPage() {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
-import { LayoutDashboard, LogOut, User, Shield } from 'lucide-react';
+import { LayoutDashboard, LogOut, User } from 'lucide-react';
 
 export default function Navbar() {
   const { dbUser, signOut } = useAuthStore();
@@ -9,7 +9,7 @@ export default function Navbar() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/login');
+    navigate('/');
   };
 
   return (
@@ -17,9 +17,8 @@ export default function Navbar() {
       position: 'sticky',
       top: 0,
       zIndex: 40,
-      background: 'rgba(10, 10, 15, 0.85)',
-      backdropFilter: 'blur(20px)',
-      borderBottom: '1px solid var(--glass-border)',
+      background: 'var(--color-bg)',
+      borderBottom: '1px solid var(--color-border)',
     }}>
       <div style={{
         maxWidth: 1200,
@@ -36,43 +35,41 @@ export default function Navbar() {
           textDecoration: 'none', color: 'var(--color-text)',
         }}>
           <div style={{
-            width: 36, height: 36,
-            borderRadius: 'var(--radius-md)',
-            background: 'linear-gradient(135deg, var(--color-primary), var(--color-accent))',
+            width: 32, height: 32,
+            borderRadius: 'var(--radius-sm)',
+            background: 'var(--color-text)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 2px 12px rgba(99, 102, 241, 0.3)',
           }}>
-            <Shield size={18} color="white" strokeWidth={2.5} />
+            <span style={{ fontSize: 16, color: 'var(--color-bg)', fontWeight: 700, lineHeight: 1 }}>◈</span>
           </div>
           <span style={{
-            fontSize: 18, fontWeight: 700,
-            background: 'linear-gradient(135deg, #e0e0ff, #c4b5fd)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+            fontSize: 16, fontWeight: 700,
+            letterSpacing: '-0.02em',
+            color: 'var(--color-text)',
           }}>
             CuratiX Vault
           </span>
         </Link>
 
         {/* Right side */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {location.pathname !== '/dashboard' && (
             <Link to="/dashboard" className="btn-ghost">
-              <LayoutDashboard size={16} />
-              Dashboard
+              <LayoutDashboard size={14} />
+              <span className="text-sm font-medium">Dashboard</span>
             </Link>
           )}
 
           <Link to="/profile" style={{
-            display: 'flex', alignItems: 'center', gap: 10,
-            padding: '6px 12px',
-            background: 'var(--color-surface)',
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '4px 12px 4px 4px',
+            background: 'var(--color-bg-secondary)',
             borderRadius: 'var(--radius-full)',
             border: '1px solid var(--color-border)',
             textDecoration: 'none',
             color: 'inherit',
             transition: 'all 0.2s',
-          }} className="hover:border-indigo-500/50 hover:bg-indigo-500/5 hover:shadow-lg hover:shadow-indigo-500/5 group">
+          }} className="hover:border-white hover:bg-white/5 group">
             {dbUser?.photoUrl ? (
               <img
                 src={dbUser.photoUrl}
@@ -87,23 +84,24 @@ export default function Navbar() {
               <div style={{
                 width: 28, height: 28,
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, var(--color-primary), var(--color-accent))',
+                background: 'var(--color-surface)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
+                border: '1px solid var(--color-border)',
               }}>
-                <User size={14} color="white" />
+                <User size={14} color="var(--color-text-secondary)" />
               </div>
             )}
             <span style={{
               fontSize: 13, fontWeight: 500,
-              color: 'var(--color-text-secondary)',
+              color: 'var(--color-text)',
               maxWidth: 120, overflow: 'hidden',
               textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-            }} className="group-hover:text-indigo-400">
+            }}>
               {dbUser?.displayName || dbUser?.email || 'User'}
             </span>
           </Link>
 
-          <button onClick={handleSignOut} className="btn-ghost" title="Sign out">
+          <button onClick={handleSignOut} className="btn-ghost" title="Sign out" style={{ padding: '8px' }}>
             <LogOut size={16} />
           </button>
         </div>
@@ -111,3 +109,4 @@ export default function Navbar() {
     </nav>
   );
 }
+

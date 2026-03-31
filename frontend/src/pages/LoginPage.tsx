@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
-import { Shield, Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const { user, loading, error, signInWithGoogle, signInWithEmail, signUpWithEmail, clearError } = useAuthStore();
@@ -52,41 +52,61 @@ export default function LoginPage() {
         pointerEvents: 'none',
       }} />
 
-      <div className="animate-scale-in" style={{
+      <div className="animate-reveal" style={{
         width: '100%',
-        maxWidth: 440,
+        maxWidth: 1000,
         position: 'relative',
         zIndex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 80,
+        flexWrap: 'wrap', // Auto-stack on mobile
       }}>
-        {/* Logo + Title */}
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+        {/* Left Side: Brand Identity */}
+        <div style={{ flex: 1, minWidth: 320, textAlign: 'left' }}>
           <div style={{
-            width: 64, height: 64,
-            borderRadius: 'var(--radius-lg)',
-            background: 'linear-gradient(135deg, var(--color-primary), var(--color-accent))',
+            width: 56, height: 56,
+            borderRadius: 16,
+            background: 'white',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 20px',
-            boxShadow: '0 4px 24px rgba(99, 102, 241, 0.35)',
-            animation: 'pulse-glow 3s ease-in-out infinite',
+            marginBottom: 24,
+            boxShadow: '0 12px 32px rgba(255, 255, 256, 0.15)',
           }}>
-            <Shield size={30} color="white" strokeWidth={2} />
+            <span style={{ fontSize: 28, color: '#000', fontWeight: 800, lineHeight: 1 }}>◈</span>
           </div>
           <h1 style={{
-            fontSize: 32, fontWeight: 800,
-            background: 'linear-gradient(135deg, #f0f0f5, #c4b5fd)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            marginBottom: 8,
+            fontSize: 'clamp(44px, 6vw, 72px)', 
+            fontWeight: 800,
+            color: 'white',
+            letterSpacing: '-0.06em',
+            lineHeight: 0.9,
+            marginBottom: 20,
           }}>
             CuratiX Vault
           </h1>
-          <p style={{ color: 'var(--color-text-muted)', fontSize: 15 }}>
+          <p style={{ 
+            color: 'var(--color-text-secondary)', 
+            fontSize: 18, 
+            fontWeight: 400,
+            maxWidth: 400,
+            lineHeight: 1.6,
+            opacity: 0.8
+          }}>
             Your team's hackathon command center
           </p>
         </div>
 
-        {/* Auth Card */}
-        <div className="glass-card" style={{ padding: 32 }}>
+        {/* Right Side: Auth Card */}
+        <div className="card" style={{ 
+          flex: '0 0 460px', 
+          padding: '40px 40px 48px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: 32,
+          minWidth: 320 
+        }}>
           {/* Google Sign In */}
           <button
             onClick={signInWithGoogle}
@@ -95,29 +115,33 @@ export default function LoginPage() {
               width: '100%',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
               padding: '14px 24px',
+              height: 52,
               background: 'white',
-              color: '#1f2937',
-              fontWeight: 600,
+              color: '#000',
+              fontWeight: 700,
               fontSize: 15,
               border: 'none',
-              borderRadius: 'var(--radius-md)',
+              borderRadius: 14,
               cursor: 'pointer',
-              transition: 'all var(--transition-base)',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              boxShadow: 'var(--shadow-glow)',
             }}
-            onMouseOver={e => (e.currentTarget.style.transform = 'translateY(-1px)')}
+            onMouseOver={e => (e.currentTarget.style.transform = 'translateY(-2px)')}
             onMouseOut={e => (e.currentTarget.style.transform = 'translateY(0)')}
           >
-            <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.9 33.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 5.7 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.2-2.7-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.5 15.5 18.8 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 5.7 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.6 13.4-4.5l-6.2-5.2C29.5 35.4 26.9 36 24 36c-5.3 0-9.8-3.4-11.4-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.1-3.9 5.5l6.2 5.2C37.1 39.2 44 34 44 24c0-1.3-.2-2.7-.4-3.9z"/></svg>
+            <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.9 33.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 5.7 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.2-2.7-.4-3.9z" /><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.5 15.5 18.8 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 5.7 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" /><path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.6 13.4-4.5l-6.2-5.2C29.5 35.4 26.9 36 24 36c-5.3 0-9.8-3.4-11.4-8l-6.5 5C9.5 39.6 16.2 44 24 44z" /><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.1-3.9 5.5l6.2 5.2C37.1 39.2 44 34 44 24c0-1.3-.2-2.7-.4-3.9z" /></svg>
             Continue with Google
           </button>
 
           {/* Divider */}
           <div style={{
-            display: 'flex', alignItems: 'center', gap: 16,
-            margin: '24px 0',
+            display: 'flex', alignItems: 'center', gap: 14,
+            margin: '4px 0',
             color: 'var(--color-text-muted)',
-            fontSize: 13,
+            fontSize: 12,
+            fontWeight: 600,
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em'
           }}>
             <div style={{ flex: 1, height: 1, background: 'var(--color-border)' }} />
             or
@@ -125,12 +149,12 @@ export default function LoginPage() {
           </div>
 
           {/* Email/Password form */}
-          <form onSubmit={handleEmailAuth} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <form onSubmit={handleEmailAuth} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-              <label className="input-label">Email address</label>
+              <label className="input-label" style={{ marginBottom: 12, fontSize: 12 }}>Email address</label>
               <div style={{ position: 'relative' }}>
                 <Mail size={16} style={{
-                  position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
+                  position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)',
                   color: 'var(--color-text-muted)',
                 }} />
                 <input
@@ -140,16 +164,16 @@ export default function LoginPage() {
                   className="input-field"
                   placeholder="you@example.com"
                   required
-                  style={{ paddingLeft: 40 }}
+                  style={{ paddingLeft: 44, height: 52 }}
                 />
               </div>
             </div>
 
             <div>
-              <label className="input-label">Password</label>
+              <label className="input-label" style={{ marginBottom: 12, fontSize: 12 }}>Password</label>
               <div style={{ position: 'relative' }}>
                 <Lock size={16} style={{
-                  position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
+                  position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)',
                   color: 'var(--color-text-muted)',
                 }} />
                 <input
@@ -160,13 +184,13 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   required
                   minLength={6}
-                  style={{ paddingLeft: 40, paddingRight: 40 }}
+                  style={{ paddingLeft: 44, paddingRight: 44, height: 52 }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   style={{
-                    position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
+                    position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
                     background: 'none', border: 'none', cursor: 'pointer',
                     color: 'var(--color-text-muted)',
                   }}
@@ -178,34 +202,34 @@ export default function LoginPage() {
 
             {error && (
               <div style={{
-                padding: '10px 14px',
+                padding: '12px 16px',
                 background: 'rgba(239, 68, 68, 0.1)',
                 border: '1px solid rgba(239, 68, 68, 0.2)',
-                borderRadius: 'var(--radius-sm)',
+                borderRadius: 12,
                 color: '#f87171',
-                fontSize: 13,
+                fontSize: 14,
               }}>
                 {error}
               </div>
             )}
 
-            <button type="submit" className="btn-primary" disabled={loading} style={{ width: '100%', padding: 14 }}>
+            <button type="submit" className="btn-primary" disabled={loading} style={{ width: '100%', padding: '14px', borderRadius: 14, height: 52, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
               {loading ? 'Please wait...' : (isSignUp ? 'Create Account' : 'Sign In')}
-              {!loading && <ArrowRight size={16} />}
+              {!loading && <ArrowRight size={18} />}
             </button>
           </form>
 
           {/* Toggle sign in / sign up */}
           <p style={{
-            textAlign: 'center', marginTop: 20,
-            fontSize: 13, color: 'var(--color-text-muted)',
+            textAlign: 'center',
+            fontSize: 13, color: 'var(--color-text-secondary)',
           }}>
             {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
             <button
               onClick={() => { setIsSignUp(!isSignUp); clearError(); }}
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
-                color: 'var(--color-primary-light)', fontWeight: 600,
+                color: 'white', fontWeight: 700,
                 fontSize: 13,
               }}
             >

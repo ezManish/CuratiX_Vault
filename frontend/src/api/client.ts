@@ -2,7 +2,7 @@ import axios from 'axios';
 import { auth } from '../lib/firebase';
 
 const api = axios.create({
-  baseURL: '', // use Vite proxy so all /api/* routes go through localhost:5173
+  baseURL: import.meta.env.VITE_API_BASE_URL || '', 
   headers: {
     'Content-Type': 'application/json',
   },
