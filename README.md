@@ -2,13 +2,14 @@
 ### The Command Center for Hackathon Teams. One Board = One Project.
 
 [![Backend](https://img.shields.io/badge/Backend-Render-brightgreen)](https://curatix-vault.onrender.com/swagger-ui/index.html)
-[![Frontend](https://img.shields.io/badge/Frontend-Vercel-black)](https://vercel.com)
+[![Frontend](https://img.shields.io/badge/Frontend-Vercel-black)](https://curatix.co.in)
+[![Domain](https://img.shields.io/badge/Domain-GoDaddy-blue)](https://curatix.co.in)
 [![Java](https://img.shields.io/badge/Stack-Java_21-orange)](https://adoptium.net/)
 [![React](https://img.shields.io/badge/Stack-React_19-blue)](https://react.dev/)
 
 CuratiX Vault is an enterprise-grade workspace built specifically for hackathon teams. It eliminates the chaos of scattered files, unclear ownership, and messy submissions by organizing team data, project assets, roles, and logistics into a single structured system.
 
-**Live Site:** https://curati-x-vault.vercel.app/  
+**Live Production Site:** https://curatix.co.in/  
 **API Documentation:** https://curatix-vault.onrender.com/swagger-ui/index.html
 
 ---
@@ -56,7 +57,7 @@ https://curatix-vault.onrender.com/swagger-ui/index.html
 | POST | /api/boards/{id}/profiles | Synchronize or update regional member profiles |
 | POST | /api/boards/{id}/files | Upload assets to the project vault |
 | POST | /api/invite/join/{token} | Authenticate and join a team via token |
-| GET | /api/health | System heartbeat and monitoring |
+| GET | /api/health | System heartbeat and monitoring (24/7 Keep-Alive) |
 
 ---
 
