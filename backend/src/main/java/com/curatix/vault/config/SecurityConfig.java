@@ -43,6 +43,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Public: invite preview (token-based, before login)
                         .requestMatchers("/api/invite/preview/**").permitAll()
+                        // Public: Health Check for Keep-Alive
+                        .requestMatchers("/api/health/**").permitAll()
                         // Public: Swagger UI
                         .requestMatchers("/swagger-ui/**", "/api-docs/**").permitAll()
                         // Everything else requires Firebase token (including /api/invite/join)
