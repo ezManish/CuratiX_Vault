@@ -201,7 +201,7 @@ export default function BoardPage() {
           <MembersTab
             boardId={bid} members={members} canEdit={canEdit} searchQuery={searchQuery}
             setSearchQuery={setSearchQuery} showAddMember={showAddMember} setShowAddMember={setShowAddMember}
-            onExportCsv={handleExportCsv} onReload={loadBoard} dbUser={dbUser} 
+            onExportCsv={handleExportCsv} onReload={loadBoard} dbUser={dbUser}
           />
         )}
         {activeTab === 'files' && (
@@ -264,7 +264,7 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
         {/* Result Badge Card */}
         {board.result && (
           <div className="card" style={{ padding: 24, display: 'flex', alignItems: 'center', gap: 20 }}>
-             <div style={{
+            <div style={{
               width: 52, height: 52, borderRadius: 16,
               background: `${resultColors[board.result] || '#94a3b8'}15`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -272,8 +272,8 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
               <Trophy size={24} color={resultColors[board.result] || '#94a3b8'} />
             </div>
             <div>
-              <div style={{ 
-                fontSize: 14, fontWeight: 800, 
+              <div style={{
+                fontSize: 14, fontWeight: 800,
                 color: resultColors[board.result] || '#94a3b8',
                 letterSpacing: '0.05em'
               }}>
@@ -290,54 +290,54 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           {/* Section 1: Problem & Solution */}
           <div className="card" style={{ padding: 28 }}>
-             <h3 style={{ fontSize: 14, fontWeight: 800, marginBottom: 20, color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
-               <FileText size={18} /> PROJECT MISSION
-             </h3>
-             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                {board.problemStatement ? (
-                  <div>
-                    <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', display: 'block', marginBottom: 6 }}>PROBLEM STATEMENT</label>
-                    <p style={{ fontSize: 15, lineHeight: 1.6 }}>{board.problemStatement}</p>
-                  </div>
-                ) : (
-                  <div style={{ fontStyle: 'italic', color: 'var(--color-text-muted)', fontSize: 14 }}>No problem statement provided.</div>
-                )}
+            <h3 style={{ fontSize: 14, fontWeight: 800, marginBottom: 20, color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
+              <FileText size={18} /> PROJECT MISSION
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {board.problemStatement ? (
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', display: 'block', marginBottom: 6 }}>PROBLEM STATEMENT</label>
+                  <p style={{ fontSize: 15, lineHeight: 1.6 }}>{board.problemStatement}</p>
+                </div>
+              ) : (
+                <div style={{ fontStyle: 'italic', color: 'var(--color-text-muted)', fontSize: 14 }}>No problem statement provided.</div>
+              )}
 
-                {board.projectIdea && (
-                  <div>
-                    <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', display: 'block', marginBottom: 6 }}>OUR SOLUTION / IDEA</label>
-                    <p style={{ fontSize: 15, lineHeight: 1.6 }}>{board.projectIdea}</p>
-                  </div>
-                )}
-             </div>
+              {board.projectIdea && (
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', display: 'block', marginBottom: 6 }}>OUR SOLUTION / IDEA</label>
+                  <p style={{ fontSize: 15, lineHeight: 1.6 }}>{board.projectIdea}</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Section 2: Links and Resources */}
           {(board.submissionUrl || (board.repoUrls && board.repoUrls.length > 0)) && (
             <div className="card" style={{ padding: 28 }}>
-               <h3 style={{ fontSize: 14, fontWeight: 800, marginBottom: 20, color: '#10b981', display: 'flex', alignItems: 'center', gap: 10 }}>
-                 <Link2 size={18} /> RESOURCES & LINKS
-               </h3>
-               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
-                 {board.submissionUrl && (
-                   <a href={board.submissionUrl} target="_blank" rel="noreferrer" className="btn-secondary" style={{ flex: 1, minWidth: 200, justifyContent: 'center' }}>
-                     <ExternalLink size={16} /> View Submission
-                   </a>
-                 )}
-                 {board.repoUrls && board.repoUrls.map((url: string, i: number) => (
-                   <a key={i} href={url} target="_blank" rel="noreferrer" className="btn-secondary" style={{ flex: 1, minWidth: 200, justifyContent: 'center' }}>
-                     <Code2 size={16} /> {board.repoUrls.length > 1 ? `Repository ${i + 1}` : 'GitHub Repository'}
-                   </a>
-                 ))}
-               </div>
+              <h3 style={{ fontSize: 14, fontWeight: 800, marginBottom: 20, color: '#10b981', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Link2 size={18} /> RESOURCES & LINKS
+              </h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+                {board.submissionUrl && (
+                  <a href={board.submissionUrl} target="_blank" rel="noreferrer" className="btn-secondary" style={{ flex: 1, minWidth: 200, justifyContent: 'center' }}>
+                    <ExternalLink size={16} /> View Submission
+                  </a>
+                )}
+                {board.repoUrls && board.repoUrls.map((url: string, i: number) => (
+                  <a key={i} href={url} target="_blank" rel="noreferrer" className="btn-secondary" style={{ flex: 1, minWidth: 200, justifyContent: 'center' }}>
+                    <Code2 size={16} /> {board.repoUrls.length > 1 ? `Repository ${i + 1}` : 'GitHub Repository'}
+                  </a>
+                ))}
+              </div>
             </div>
           )}
 
           {/* Section 3: Notes */}
           {board.notes && (
             <div className="card" style={{ padding: 28 }}>
-               <h3 style={{ fontSize: 14, fontWeight: 800, marginBottom: 12, color: '#94a3b8' }}>INTERNAL NOTES</h3>
-               <p style={{ fontSize: 14, color: 'var(--color-text-secondary)', whiteSpace: 'pre-wrap' }}>{board.notes}</p>
+              <h3 style={{ fontSize: 14, fontWeight: 800, marginBottom: 12, color: '#94a3b8' }}>INTERNAL NOTES</h3>
+              <p style={{ fontSize: 14, color: 'var(--color-text-secondary)', whiteSpace: 'pre-wrap' }}>{board.notes}</p>
             </div>
           )}
         </div>
@@ -347,56 +347,56 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
           <div className="card" style={{ padding: 24 }}>
             <h3 style={{ fontSize: 13, fontWeight: 800, marginBottom: 20, letterSpacing: '0.05em', color: 'var(--color-text-muted)' }}>HACKATHON CONTEXT</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-               <div style={{ display: 'flex', gap: 12 }}>
-                 <div style={{ color: 'var(--color-primary-light)' }}><Trophy size={16} /></div>
-                 <div>
-                   <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: 2 }}>PLATFORM</div>
-                   <div style={{ fontSize: 14, fontWeight: 600 }}>{board.platform || 'N/A'}</div>
-                 </div>
-               </div>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ color: 'var(--color-primary-light)' }}><Trophy size={16} /></div>
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: 2 }}>PLATFORM</div>
+                  <div style={{ fontSize: 14, fontWeight: 600 }}>{board.platform || 'N/A'}</div>
+                </div>
+              </div>
 
-               <div style={{ display: 'flex', gap: 12 }}>
-                 <div style={{ color: '#f59e0b' }}><Tag size={16} /></div>
-                 <div>
-                   <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: 2 }}>THEME / TRACK</div>
-                   <div style={{ fontSize: 14, fontWeight: 600 }}>{board.theme || 'Open Innovation'}</div>
-                 </div>
-               </div>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ color: '#f59e0b' }}><Tag size={16} /></div>
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: 2 }}>THEME / TRACK</div>
+                  <div style={{ fontSize: 14, fontWeight: 600 }}>{board.theme || 'Open Innovation'}</div>
+                </div>
+              </div>
 
-               <div style={{ display: 'flex', gap: 12 }}>
-                 <div style={{ color: '#10b981' }}><Users size={16} /></div>
-                 <div>
-                   <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: 2 }}>TEAM NAME</div>
-                   <div style={{ fontSize: 14, fontWeight: 600 }}>{board.teamName || 'N/A'}</div>
-                 </div>
-               </div>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ color: '#10b981' }}><Users size={16} /></div>
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: 2 }}>TEAM NAME</div>
+                  <div style={{ fontSize: 14, fontWeight: 600 }}>{board.teamName || 'N/A'}</div>
+                </div>
+              </div>
 
-               <div style={{ display: 'flex', gap: 12 }}>
-                 <div style={{ color: '#ec4899' }}><Calendar size={16} /></div>
-                 <div>
-                   <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: 2 }}>EVENT DATE</div>
-                   <div style={{ fontSize: 14, fontWeight: 600 }}>{board.eventDate || 'TBD'}</div>
-                 </div>
-               </div>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ color: '#ec4899' }}><Calendar size={16} /></div>
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: 2 }}>EVENT DATE</div>
+                  <div style={{ fontSize: 14, fontWeight: 600 }}>{board.eventDate || 'TBD'}</div>
+                </div>
+              </div>
 
-               <div style={{ display: 'flex', gap: 12 }}>
-                 <div style={{ color: '#8b5cf6' }}><MapPin size={16} /></div>
-                 <div>
-                   <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: 2 }}>VENUE</div>
-                   <div style={{ fontSize: 14, fontWeight: 600 }}>{board.venue || 'Online / Remote'}</div>
-                 </div>
-               </div>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ color: '#8b5cf6' }}><MapPin size={16} /></div>
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: 2 }}>VENUE</div>
+                  <div style={{ fontSize: 14, fontWeight: 600 }}>{board.venue || 'Online / Remote'}</div>
+                </div>
+              </div>
             </div>
           </div>
-          
+
           {board.prize && (
-            <div className="card" style={{ 
-              padding: 24, 
+            <div className="card" style={{
+              padding: 24,
               borderColor: 'rgba(74, 222, 128, 0.3)'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#4ade80', marginBottom: 8 }}>
                 <Trophy size={18} />
-                <span style={{ fontSize: 12, fontWeight: 800 }}>AWARD WON</span>
+                <span style={{ fontSize: 12, fontWeight: 800 }}>AWARD</span>
               </div>
               <div style={{ fontSize: 18, fontWeight: 800 }}>{board.prize}</div>
             </div>
@@ -408,9 +408,9 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
 }
 
 /* ==================== MEMBERS TAB ==================== */
-function MembersTab({ 
-  boardId, members, canEdit, searchQuery, setSearchQuery, 
-  showAddMember, setShowAddMember, onExportCsv, onReload, 
+function MembersTab({
+  boardId, members, canEdit, searchQuery, setSearchQuery,
+  showAddMember, setShowAddMember, onExportCsv, onReload,
   dbUser
 }: any) {
   const [formData, setFormData] = useState<any>({
@@ -442,7 +442,7 @@ function MembersTab({
       return;
     }
     if (!confirm('Remove this member from the board?')) return;
-    
+
     setRemovingIds(prev => new Set(prev).add(userId));
     try {
       await boardsApi.removeMember(boardId, userId);
@@ -549,7 +549,7 @@ function MembersTab({
                 </div>
                 <span className={`badge badge-${m.role?.toLowerCase() || 'viewer'}`}>{m.role}</span>
               </div>
-              
+
               <div style={{ marginTop: 12, padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.05)' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 12 }}>
                   <div style={{ fontSize: 11 }}>
@@ -601,12 +601,12 @@ function MembersTab({
                   </div>
                 )}
               </div>
-              
+
               <div style={{ display: 'flex', gap: 8, marginTop: 12, justifyContent: 'flex-end' }}>
                 {canEdit && m.user?.id && m.user?.firebaseUid !== dbUser?.firebaseUid && (
-                  <button 
-                    className="btn-ghost" 
-                    style={{ fontSize: 12, color: removingIds.has(m.user.id) ? 'var(--color-text-muted)' : '#ef4444' }} 
+                  <button
+                    className="btn-ghost"
+                    style={{ fontSize: 12, color: removingIds.has(m.user.id) ? 'var(--color-text-muted)' : '#ef4444' }}
                     onClick={() => handleDelete(m.user.id)}
                     disabled={removingIds.has(m.user.id)}
                   >
@@ -634,20 +634,20 @@ function MembersTab({
                 </p>
                 <div>
                   <label className="input-label">Email Address *</label>
-                  <input 
-                    className="input-field" 
-                    type="email" 
-                    required 
-                    value={formData.email} 
-                    onChange={e => setFormData({ ...formData, email: e.target.value })} 
-                    placeholder="member@example.com" 
+                  <input
+                    className="input-field"
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="member@example.com"
                   />
                 </div>
                 <div>
                   <label className="input-label">Role</label>
-                  <select 
-                    className="input-field" 
-                    value={formData.role} 
+                  <select
+                    className="input-field"
+                    value={formData.role}
                     onChange={e => setFormData({ ...formData, role: e.target.value })}
                   >
                     <option value="EDITOR">EDITOR (Can edit files/records)</option>
@@ -938,104 +938,104 @@ function SettingsTab({ boardId, board, isOwner, canEdit, onDeleteBoard, onReload
             <Settings size={20} /> Project Settings
           </h3>
           <form onSubmit={handleUpdate}>
-             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 24 }}>
-                <div style={{ gridColumn: 'span 2' }}>
-                  <label className="input-label">Project Name *</label>
-                  <input className="input-field" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 24 }}>
+              <div style={{ gridColumn: 'span 2' }}>
+                <label className="input-label">Project Name *</label>
+                <input className="input-field" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
+              </div>
+              <div>
+                <label className="input-label">Platform</label>
+                <input className="input-field" value={formData.platform} onChange={e => setFormData({ ...formData, platform: e.target.value })} placeholder="Devfolio, Unstop..." />
+              </div>
+              <div>
+                <label className="input-label">Track / Theme</label>
+                <input className="input-field" value={formData.theme} onChange={e => setFormData({ ...formData, theme: e.target.value })} placeholder="AI, Fintech, etc." />
+              </div>
+              <div>
+                <label className="input-label">Event Date</label>
+                <input className="input-field" type="date" value={formData.eventDate} onChange={e => setFormData({ ...formData, eventDate: e.target.value })} />
+              </div>
+              <div>
+                <label className="input-label">Venue</label>
+                <input className="input-field" value={formData.venue} onChange={e => setFormData({ ...formData, venue: e.target.value })} placeholder="Location or 'Online'" />
+              </div>
+              <div>
+                <label className="input-label">Team Name</label>
+                <input className="input-field" value={formData.teamName} onChange={e => setFormData({ ...formData, teamName: e.target.value })} />
+              </div>
+              <div>
+                <label className="input-label">Result</label>
+                <select className="input-field" value={formData.result} onChange={e => setFormData({ ...formData, result: e.target.value })}>
+                  <option value="PARTICIPATED">Participated</option>
+                  <option value="SHORTLISTED">Shortlisted</option>
+                  <option value="TOP_N">Top N</option>
+                  <option value="WINNER">Winner</option>
+                </select>
+              </div>
+              <div style={{ gridColumn: 'span 2' }}>
+                <label className="input-label">Problem Statement</label>
+                <textarea className="input-field" rows={3} value={formData.problemStatement} onChange={e => setFormData({ ...formData, problemStatement: e.target.value })} placeholder="Describe the challenge..." />
+              </div>
+              <div style={{ gridColumn: 'span 2' }}>
+                <label className="input-label">Project Idea</label>
+                <textarea className="input-field" rows={3} value={formData.projectIdea} onChange={e => setFormData({ ...formData, projectIdea: e.target.value })} placeholder="Your innovative solution..." />
+              </div>
+              <div style={{ gridColumn: 'span 2' }}>
+                <label className="input-label">Prize Details</label>
+                <input className="input-field" value={formData.prize} onChange={e => setFormData({ ...formData, prize: e.target.value })} placeholder="What did you win?" />
+              </div>
+              <div>
+                <label className="input-label">Submission URL</label>
+                <input className="input-field" value={formData.submissionUrl} onChange={e => setFormData({ ...formData, submissionUrl: e.target.value })} placeholder="https://..." />
+              </div>
+              <div style={{ gridColumn: 'span 2' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <label className="input-label" style={{ margin: 0 }}>Repository URLs</label>
+                  <button
+                    type="button"
+                    className="btn-ghost"
+                    style={{ fontSize: 12, padding: '4px 10px' }}
+                    onClick={() => setFormData({ ...formData, repoUrls: [...formData.repoUrls, ''] })}
+                  >
+                    <Plus size={13} /> Add Repo
+                  </button>
                 </div>
-                <div>
-                  <label className="input-label">Platform</label>
-                  <input className="input-field" value={formData.platform} onChange={e => setFormData({ ...formData, platform: e.target.value })} placeholder="Devfolio, Unstop..." />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {formData.repoUrls.map((url: string, i: number) => (
+                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                      <input
+                        className="input-field"
+                        value={url}
+                        onChange={e => {
+                          const updated = [...formData.repoUrls];
+                          updated[i] = e.target.value;
+                          setFormData({ ...formData, repoUrls: updated });
+                        }}
+                        placeholder={`https://github.com/... ${formData.repoUrls.length > 1 ? `(Repo ${i + 1})` : ''}`}
+                        style={{ flex: 1 }}
+                      />
+                      {formData.repoUrls.length > 1 && (
+                        <button
+                          type="button"
+                          className="btn-ghost"
+                          style={{ color: '#ef4444', padding: '8px' }}
+                          onClick={() => setFormData({ ...formData, repoUrls: formData.repoUrls.filter((_: string, idx: number) => idx !== i) })}
+                        >
+                          <X size={15} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <label className="input-label">Track / Theme</label>
-                  <input className="input-field" value={formData.theme} onChange={e => setFormData({ ...formData, theme: e.target.value })} placeholder="AI, Fintech, etc." />
-                </div>
-                <div>
-                  <label className="input-label">Event Date</label>
-                  <input className="input-field" type="date" value={formData.eventDate} onChange={e => setFormData({ ...formData, eventDate: e.target.value })} />
-                </div>
-                <div>
-                  <label className="input-label">Venue</label>
-                  <input className="input-field" value={formData.venue} onChange={e => setFormData({ ...formData, venue: e.target.value })} placeholder="Location or 'Online'" />
-                </div>
-                <div>
-                   <label className="input-label">Team Name</label>
-                   <input className="input-field" value={formData.teamName} onChange={e => setFormData({ ...formData, teamName: e.target.value })} />
-                </div>
-                <div>
-                  <label className="input-label">Result</label>
-                  <select className="input-field" value={formData.result} onChange={e => setFormData({ ...formData, result: e.target.value })}>
-                    <option value="PARTICIPATED">Participated</option>
-                    <option value="SHORTLISTED">Shortlisted</option>
-                    <option value="TOP_N">Top N</option>
-                    <option value="WINNER">Winner</option>
-                  </select>
-                </div>
-                <div style={{ gridColumn: 'span 2' }}>
-                  <label className="input-label">Problem Statement</label>
-                  <textarea className="input-field" rows={3} value={formData.problemStatement} onChange={e => setFormData({ ...formData, problemStatement: e.target.value })} placeholder="Describe the challenge..." />
-                </div>
-                <div style={{ gridColumn: 'span 2' }}>
-                  <label className="input-label">Project Idea</label>
-                  <textarea className="input-field" rows={3} value={formData.projectIdea} onChange={e => setFormData({ ...formData, projectIdea: e.target.value })} placeholder="Your innovative solution..." />
-                </div>
-                <div style={{ gridColumn: 'span 2' }}>
-                   <label className="input-label">Prize Details</label>
-                   <input className="input-field" value={formData.prize} onChange={e => setFormData({ ...formData, prize: e.target.value })} placeholder="What did you win?" />
-                </div>
-                <div>
-                   <label className="input-label">Submission URL</label>
-                   <input className="input-field" value={formData.submissionUrl} onChange={e => setFormData({ ...formData, submissionUrl: e.target.value })} placeholder="https://..." />
-                </div>
-                <div style={{ gridColumn: 'span 2' }}>
-                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                     <label className="input-label" style={{ margin: 0 }}>Repository URLs</label>
-                     <button
-                       type="button"
-                       className="btn-ghost"
-                       style={{ fontSize: 12, padding: '4px 10px' }}
-                       onClick={() => setFormData({ ...formData, repoUrls: [...formData.repoUrls, ''] })}
-                     >
-                       <Plus size={13} /> Add Repo
-                     </button>
-                   </div>
-                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                     {formData.repoUrls.map((url: string, i: number) => (
-                       <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                         <input
-                           className="input-field"
-                           value={url}
-                           onChange={e => {
-                             const updated = [...formData.repoUrls];
-                             updated[i] = e.target.value;
-                             setFormData({ ...formData, repoUrls: updated });
-                           }}
-                           placeholder={`https://github.com/... ${formData.repoUrls.length > 1 ? `(Repo ${i + 1})` : ''}`}
-                           style={{ flex: 1 }}
-                         />
-                         {formData.repoUrls.length > 1 && (
-                           <button
-                             type="button"
-                             className="btn-ghost"
-                             style={{ color: '#ef4444', padding: '8px' }}
-                             onClick={() => setFormData({ ...formData, repoUrls: formData.repoUrls.filter((_: string, idx: number) => idx !== i) })}
-                           >
-                             <X size={15} />
-                           </button>
-                         )}
-                       </div>
-                     ))}
-                   </div>
-                </div>
-                <div style={{ gridColumn: 'span 2' }}>
-                   <label className="input-label">Internal Notes</label>
-                   <textarea className="input-field" rows={4} value={formData.notes} onChange={e => setFormData({ ...formData, notes: e.target.value })} placeholder="Private team notes..." />
-                </div>
-             </div>
-             <button type="submit" className="btn-primary" disabled={saving}>
-               {saving ? 'Updating...' : 'Save All Changes'}
-             </button>
+              </div>
+              <div style={{ gridColumn: 'span 2' }}>
+                <label className="input-label">Internal Notes</label>
+                <textarea className="input-field" rows={4} value={formData.notes} onChange={e => setFormData({ ...formData, notes: e.target.value })} placeholder="Private team notes..." />
+              </div>
+            </div>
+            <button type="submit" className="btn-primary" disabled={saving}>
+              {saving ? 'Updating...' : 'Save All Changes'}
+            </button>
           </form>
         </div>
       )}
