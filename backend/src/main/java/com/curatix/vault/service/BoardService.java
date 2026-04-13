@@ -57,7 +57,7 @@ public class BoardService {
                 .result(req.getResult() != null ? req.getResult() : BoardEntity.Result.PARTICIPATED)
                 .prize(req.getPrize())
                 .submissionUrl(req.getSubmissionUrl())
-                .repoUrl(req.getRepoUrl())
+                .repoUrls(req.getRepoUrls() != null ? req.getRepoUrls() : new java.util.ArrayList<>())
                 .notes(req.getNotes())
                 .owner(owner)
                 .build();
@@ -109,7 +109,7 @@ public class BoardService {
         if (req.getResult() != null) board.setResult(req.getResult());
         board.setPrize(req.getPrize());
         board.setSubmissionUrl(req.getSubmissionUrl());
-        board.setRepoUrl(req.getRepoUrl());
+        board.setRepoUrls(req.getRepoUrls() != null ? req.getRepoUrls() : new java.util.ArrayList<>());
         board.setNotes(req.getNotes());
 
         return boardRepository.save(board);

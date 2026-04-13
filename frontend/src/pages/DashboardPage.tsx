@@ -22,7 +22,7 @@ interface Board {
   result?: string;
   prize?: string;
   submissionUrl?: string;
-  repoUrl?: string;
+  repoUrls?: string[];
   notes?: string;
   createdAt: string;
 }

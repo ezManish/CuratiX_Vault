@@ -8,6 +8,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "boards")
@@ -61,8 +63,12 @@ public class BoardEntity {
     @Column(name = "submission_url", length = 500)
     private String submissionUrl;
 
-    @Column(name = "repo_url", length = 500)
-    private String repoUrl;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "board_repo_urls",
+            joinColumns = @JoinColumn(name = "board_id"))
+    @Column(name = "url", length = 500)
+    @Builder.Default
+    private List<String> repoUrls = new ArrayList<>();
 
     @Column(columnDefinition = "TEXT")
     private String notes;

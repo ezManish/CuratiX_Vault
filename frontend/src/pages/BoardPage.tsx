@@ -5,7 +5,7 @@ import { useAuthStore } from '../stores/authStore';
 import {
   Users, Trophy, FolderOpen, Settings, LayoutDashboard, Plus, Search, Download,
   ExternalLink, Trash2, Upload, Link2, Copy, Check,
-  Calendar, MapPin, Tag, FileText,
+  Calendar, MapPin, Tag, FileText, X,
   Image, Code2, ArrowLeft, Phone
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -313,7 +313,7 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
           </div>
 
           {/* Section 2: Links and Resources */}
-          {(board.submissionUrl || board.repoUrl) && (
+          {(board.submissionUrl || (board.repoUrls && board.repoUrls.length > 0)) && (
             <div className="card" style={{ padding: 28 }}>
                <h3 style={{ fontSize: 14, fontWeight: 800, marginBottom: 20, color: '#10b981', display: 'flex', alignItems: 'center', gap: 10 }}>
                  <Link2 size={18} /> RESOURCES & LINKS
@@ -324,11 +324,11 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
                      <ExternalLink size={16} /> View Submission
                    </a>
                  )}
-                 {board.repoUrl && (
-                   <a href={board.repoUrl} target="_blank" rel="noreferrer" className="btn-secondary" style={{ flex: 1, minWidth: 200, justifyContent: 'center' }}>
-                     <Code2 size={16} /> GitHub Repository
+                 {board.repoUrls && board.repoUrls.map((url: string, i: number) => (
+                   <a key={i} href={url} target="_blank" rel="noreferrer" className="btn-secondary" style={{ flex: 1, minWidth: 200, justifyContent: 'center' }}>
+                     <Code2 size={16} /> {board.repoUrls.length > 1 ? `Repository ${i + 1}` : 'GitHub Repository'}
                    </a>
-                 )}
+                 ))}
                </div>
             </div>
           )}
@@ -887,7 +887,7 @@ function SettingsTab({ boardId, board, isOwner, canEdit, onDeleteBoard, onReload
     result: board.result || 'PARTICIPATED',
     prize: board.prize || '',
     submissionUrl: board.submissionUrl || '',
-    repoUrl: board.repoUrl || '',
+    repoUrls: (board.repoUrls && board.repoUrls.length > 0) ? board.repoUrls : [''],
     notes: board.notes || ''
   });
 
@@ -895,7 +895,11 @@ function SettingsTab({ boardId, board, isOwner, canEdit, onDeleteBoard, onReload
     e.preventDefault();
     setSaving(true);
     try {
-      await boardsApi.update(boardId, formData);
+      const payload = {
+        ...formData,
+        repoUrls: formData.repoUrls.filter((u: string) => u.trim() !== ''),
+      };
+      await boardsApi.update(boardId, payload);
       toast.success('Project details updated!');
       onReload();
     } catch (e) {
@@ -984,9 +988,45 @@ function SettingsTab({ boardId, board, isOwner, canEdit, onDeleteBoard, onReload
                    <label className="input-label">Submission URL</label>
                    <input className="input-field" value={formData.submissionUrl} onChange={e => setFormData({ ...formData, submissionUrl: e.target.value })} placeholder="https://..." />
                 </div>
-                <div>
-                   <label className="input-label">Repository URL</label>
-                   <input className="input-field" value={formData.repoUrl} onChange={e => setFormData({ ...formData, repoUrl: e.target.value })} placeholder="https://github.com/..." />
+                <div style={{ gridColumn: 'span 2' }}>
+                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                     <label className="input-label" style={{ margin: 0 }}>Repository URLs</label>
+                     <button
+                       type="button"
+                       className="btn-ghost"
+                       style={{ fontSize: 12, padding: '4px 10px' }}
+                       onClick={() => setFormData({ ...formData, repoUrls: [...formData.repoUrls, ''] })}
+                     >
+                       <Plus size={13} /> Add Repo
+                     </button>
+                   </div>
+                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                     {formData.repoUrls.map((url: string, i: number) => (
+                       <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                         <input
+                           className="input-field"
+                           value={url}
+                           onChange={e => {
+                             const updated = [...formData.repoUrls];
+                             updated[i] = e.target.value;
+                             setFormData({ ...formData, repoUrls: updated });
+                           }}
+                           placeholder={`https://github.com/... ${formData.repoUrls.length > 1 ? `(Repo ${i + 1})` : ''}`}
+                           style={{ flex: 1 }}
+                         />
+                         {formData.repoUrls.length > 1 && (
+                           <button
+                             type="button"
+                             className="btn-ghost"
+                             style={{ color: '#ef4444', padding: '8px' }}
+                             onClick={() => setFormData({ ...formData, repoUrls: formData.repoUrls.filter((_: string, idx: number) => idx !== i) })}
+                           >
+                             <X size={15} />
+                           </button>
+                         )}
+                       </div>
+                     ))}
+                   </div>
                 </div>
                 <div style={{ gridColumn: 'span 2' }}>
                    <label className="input-label">Internal Notes</label>

@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class CreateBoardRequest {
@@ -30,6 +32,6 @@ public class CreateBoardRequest {
     private com.curatix.vault.entity.BoardEntity.Result result;
     private String prize;
     private String submissionUrl;
-    private String repoUrl;
+    private List<String> repoUrls = new ArrayList<>();
     private String notes;
 }
