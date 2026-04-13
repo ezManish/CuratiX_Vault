@@ -10,6 +10,8 @@ import com.curatix.vault.exception.ResourceNotFoundException;
 import com.curatix.vault.repository.BoardRepository;
 import com.curatix.vault.repository.MemberProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +28,8 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class MemberProfileService {
+
+    private static final Logger log = LoggerFactory.getLogger(MemberProfileService.class);
 
     private final MemberProfileRepository memberProfileRepository;
     private final BoardRepository boardRepository;
@@ -113,6 +117,7 @@ public class MemberProfileService {
                 .bio(req.getBio())
                 .build();
 
+        log.info("Creating non-linked profile '{}' for board {}", req.getFullName(), boardId);
         return memberProfileRepository.save(profile);
     }
 
@@ -161,6 +166,7 @@ public class MemberProfileService {
         if (req.getBio() != null)
             profile.setBio(req.getBio());
 
+        log.info("User {} updated profile {} on board {}", firebaseUid, profileId, boardId);
         return memberProfileRepository.save(profile);
     }
 
@@ -182,6 +188,7 @@ public class MemberProfileService {
             }
         }
 
+        log.warn("User {} deleting profile {} from board {}", firebaseUid, profileId, boardId);
         memberProfileRepository.delete(profile);
     }
 

@@ -10,6 +10,8 @@ import com.curatix.vault.repository.BoardMemberRepository;
 import com.curatix.vault.repository.BoardRepository;
 import com.curatix.vault.repository.InviteLinkRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class InviteService {
+
+    private static final Logger log = LoggerFactory.getLogger(InviteService.class);
 
     private final InviteLinkRepository inviteLinkRepository;
     private final BoardRepository boardRepository;
@@ -74,6 +78,7 @@ public class InviteService {
                 .active(true)
                 .build();
 
+        log.info("User {} generated {} invite link for board {}", firebaseUid, inviteRole, boardId);
         return inviteLinkRepository.save(link);
     }
 
@@ -99,6 +104,7 @@ public class InviteService {
                 .filter(l -> l.getBoard().getId().equals(boardId))
                 .orElseThrow(() -> new ResourceNotFoundException("Invite link not found"));
 
+        log.warn("User {} revoked invite link {} for board {}", firebaseUid, linkId, boardId);
         link.setActive(false);
         inviteLinkRepository.save(link);
     }

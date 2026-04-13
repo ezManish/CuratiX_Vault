@@ -50,7 +50,7 @@ class InviteServiceTest {
         newUser = UserEntity.builder().id(3L).firebaseUid("uid-new")
                 .email("new@test.com").displayName("New Guy").build();
         board = BoardEntity.builder().id(10L).name("Hack Board")
-                .owner(owner).deleted(false).build();
+                .owner(owner).build();
     }
 
     private InviteLinkEntity validLink(boolean active, LocalDateTime expiresAt, Integer maxUses, int useCount) {

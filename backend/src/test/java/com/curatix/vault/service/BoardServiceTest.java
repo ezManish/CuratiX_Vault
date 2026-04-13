@@ -112,7 +112,7 @@ class BoardServiceTest {
 
             BoardEntity result = boardService.createBoard("uid-owner", basicRequest("Board"));
 
-            assertThat(result.getResult()).isEqualTo(BoardEntity.Result.PARTICIPATED);
+            assertThat(result.getResult()).isEqualTo(Result.PARTICIPATED);
         }
     }
 

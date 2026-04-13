@@ -412,7 +412,7 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
                 <Trophy size={18} />
                 <span style={{ fontSize: 12, fontWeight: 800 }}>AWARD</span>
               </div>
-              <div style={{ fontSize: 18, fontWeight: 800 }}>{board.prize}</div>
+              <div style={{ fontSize: 18, fontWeight: 800 }}>{board.prize} /-</div>
             </div>
           )}
         </div>

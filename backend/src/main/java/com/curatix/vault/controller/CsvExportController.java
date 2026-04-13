@@ -6,6 +6,7 @@ import com.curatix.vault.service.MemberProfileService;
 import com.curatix.vault.service.PermissionService;
 import com.curatix.vault.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
@@ -33,7 +34,9 @@ public class CsvExportController {
         private final PermissionService permissionService;
         private final UserService userService;
 
-    @Operation(summary = "Export Members to CSV", description = "Generates a CSV file containing all member profiles for a specific board. Useful for hackathon submissions.")
+    @Operation(summary = "Export Members to CSV", description = "Generates a CSV file containing all member profiles for a specific board.")
+    @ApiResponse(responseCode = "200", description = "CSV file generated successfully")
+    @ApiResponse(responseCode = "403", description = "Forbidden - Not a member of this board")
     @GetMapping("/csv")
     public ResponseEntity<byte[]> exportCsv(
                         @AuthenticationPrincipal FirebasePrincipal principal,

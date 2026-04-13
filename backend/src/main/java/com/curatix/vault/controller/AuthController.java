@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -29,17 +27,25 @@ public class AuthController {
      */
     @Operation(summary = "Synchronize User Data", description = "Upserts a Firebase user into the local database and returns the current user profile.")
     @PostMapping("/sync")
-    public ResponseEntity<Map<String, Object>> syncUser(
+    public ResponseEntity<com.curatix.vault.dto.UserResponse> syncUser(
             @AuthenticationPrincipal FirebasePrincipal principal) {
 
         UserEntity user = userService.syncUser(principal);
 
-        return ResponseEntity.ok(Map.of(
-                "id",          user.getId(),
-                "firebaseUid", user.getFirebaseUid(),
-                "email",       user.getEmail() != null ? user.getEmail() : "",
-                "displayName", user.getDisplayName() != null ? user.getDisplayName() : "",
-                "photoUrl",    user.getPhotoUrl() != null ? user.getPhotoUrl() : ""
-        ));
+        com.curatix.vault.dto.UserResponse res = com.curatix.vault.dto.UserResponse.builder()
+                .id(user.getId())
+                .firebaseUid(user.getFirebaseUid())
+                .email(user.getEmail() != null ? user.getEmail() : "")
+                .displayName(user.getDisplayName() != null ? user.getDisplayName() : "")
+                .photoUrl(user.getPhotoUrl() != null ? user.getPhotoUrl() : "")
+                .admissionNo(user.getAdmissionNo())
+                .enrollmentNo(user.getEnrollmentNo())
+                .phone(user.getPhone())
+                .githubUrl(user.getGithubUrl())
+                .linkedinUrl(user.getLinkedinUrl())
+                .bio(user.getBio())
+                .build();
+
+        return ResponseEntity.ok(res);
     }
 }

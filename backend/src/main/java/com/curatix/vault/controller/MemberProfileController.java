@@ -10,7 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +29,8 @@ public class MemberProfileController {
     private final MemberProfileService memberProfileService;
 
     @Operation(summary = "List Board Profiles", description = "Retrieves all member profiles associated with a specific board.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved profile list")
+    @ApiResponse(responseCode = "403", description = "Forbidden - Not a member of the board")
     @GetMapping
     public ResponseEntity<List<MemberProfileEntity>> getProfiles(
             @AuthenticationPrincipal FirebasePrincipal principal,
@@ -35,27 +39,36 @@ public class MemberProfileController {
     }
 
     @Operation(summary = "Add/Update Own Profile", description = "Manually adds or synchronizes a profile for the user on a specific board.")
+    @ApiResponse(responseCode = "201", description = "Profile created successfully")
+    @ApiResponse(responseCode = "400", description = "Bad Request - Validation failed")
+    @ApiResponse(responseCode = "403", description = "Insufficient permissions")
     @PostMapping
     public ResponseEntity<MemberProfileEntity> addProfile(
             @AuthenticationPrincipal FirebasePrincipal principal,
             @PathVariable Long boardId,
-            @RequestBody MemberProfileRequest req) {
+            @Valid @RequestBody MemberProfileRequest req) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(memberProfileService.addProfile(principal.getUid(), boardId, req));
     }
 
     @Operation(summary = "Edit Profile Info", description = "Updates fields like bio, skills, and social links for a specific board profile.")
+    @ApiResponse(responseCode = "200", description = "Profile updated successfully")
+    @ApiResponse(responseCode = "403", description = "Insufficient permissions")
+    @ApiResponse(responseCode = "404", description = "Profile not found")
     @PutMapping("/{profileId}")
     public ResponseEntity<MemberProfileEntity> updateProfile(
             @AuthenticationPrincipal FirebasePrincipal principal,
             @PathVariable Long boardId,
             @PathVariable Long profileId,
-            @RequestBody MemberProfileRequest req) {
+            @Valid @RequestBody MemberProfileRequest req) {
         return ResponseEntity.ok(
                 memberProfileService.updateProfile(principal.getUid(), boardId, profileId, req));
     }
 
     @Operation(summary = "Delete Profile", description = "Deletes a specific member profile. Usually used when removing a member from a board.")
+    @ApiResponse(responseCode = "200", description = "Profile deleted successfully")
+    @ApiResponse(responseCode = "403", description = "Insufficient permissions")
+    @ApiResponse(responseCode = "404", description = "Profile not found")
     @DeleteMapping("/{profileId}")
     public ResponseEntity<Map<String, String>> deleteProfile(
             @AuthenticationPrincipal FirebasePrincipal principal,
@@ -66,6 +79,9 @@ public class MemberProfileController {
     }
 
     @Operation(summary = "Upload Profile Photo", description = "Uploads a board-specific profile photo to Cloudinary.")
+    @ApiResponse(responseCode = "200", description = "Photo uploaded successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid image file")
+    @ApiResponse(responseCode = "403", description = "Insufficient permissions")
     @PostMapping(value = "/{profileId}/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MemberProfileEntity> uploadPhoto(
             @AuthenticationPrincipal FirebasePrincipal principal,

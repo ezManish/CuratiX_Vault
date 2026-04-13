@@ -28,6 +28,8 @@ public class BoardController {
     private final BoardService boardService;
 
     @Operation(summary = "Get My Boards", description = "Retrieves a list of all boards the authenticated user is a member of.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved boards")
+    @ApiResponse(responseCode = "401", description = "Unauthorized - Valid Firebase token required")
     @GetMapping
     public ResponseEntity<List<BoardEntity>> getMyBoards(
             @AuthenticationPrincipal FirebasePrincipal principal) {
@@ -35,6 +37,9 @@ public class BoardController {
     }
 
     @Operation(summary = "Create Board", description = "Creates a new board and assigns the authenticated user as the OWNER.")
+    @ApiResponse(responseCode = "201", description = "Board created successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request payload")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
     @PostMapping
     public ResponseEntity<BoardEntity> createBoard(
             @AuthenticationPrincipal FirebasePrincipal principal,
@@ -44,8 +49,9 @@ public class BoardController {
     }
 
     @Operation(summary = "Get Board Details", description = "Retrieves full details of a specific board if the user is a member.")
-    @ApiResponse(responseCode = "403", description = "User is not a member of this board")
-    @ApiResponse(responseCode = "404", description = "Board not found")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved board details")
+    @ApiResponse(responseCode = "403", description = "Forbidden - User is not a member of this board")
+    @ApiResponse(responseCode = "404", description = "Not Found - Board does not exist or is deleted")
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardEntity> getBoard(
             @AuthenticationPrincipal FirebasePrincipal principal,
@@ -54,6 +60,10 @@ public class BoardController {
     }
 
     @Operation(summary = "Update Board Settings", description = "Updates metadata for a board. Requires EDITOR role or above.")
+    @ApiResponse(responseCode = "200", description = "Board updated successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request data")
+    @ApiResponse(responseCode = "403", description = "Insufficient permissions")
+    @ApiResponse(responseCode = "404", description = "Board not found")
     @PutMapping("/{boardId}")
     public ResponseEntity<BoardEntity> updateBoard(
             @AuthenticationPrincipal FirebasePrincipal principal,
@@ -63,6 +73,9 @@ public class BoardController {
     }
 
     @Operation(summary = "Delete Board", description = "Soft-deletes a board. Requires OWNER role.")
+    @ApiResponse(responseCode = "200", description = "Board deleted successfully")
+    @ApiResponse(responseCode = "403", description = "Only the OWNER can delete a board")
+    @ApiResponse(responseCode = "404", description = "Board not found")
     @DeleteMapping("/{boardId}")
     public ResponseEntity<Map<String, String>> deleteBoard(
             @AuthenticationPrincipal FirebasePrincipal principal,
@@ -72,6 +85,7 @@ public class BoardController {
     }
 
     @Operation(summary = "List Board Members", description = "Retrieves all members of a board, including their roles and profiles.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved member list")
     @GetMapping("/{boardId}/members")
     public ResponseEntity<List<BoardMemberResponse>> getBoardMembers(
             @AuthenticationPrincipal FirebasePrincipal principal,
@@ -79,7 +93,10 @@ public class BoardController {
         return ResponseEntity.ok(boardService.getBoardMembers(principal.getUid(), boardId));
     }
 
-    @Operation(summary = "Change Member Role", description = "Updates the role of a member (e.g. EDITOR to VIEWER). Requires OWNER role.")
+    @Operation(summary = "Change Member Role", description = "Updates the role of a member. Requires OWNER role.")
+    @ApiResponse(responseCode = "200", description = "Role updated")
+    @ApiResponse(responseCode = "400", description = "Invalid role specified")
+    @ApiResponse(responseCode = "403", description = "Insufficient permissions")
     @PutMapping("/{boardId}/members/{userId}/role")
     public ResponseEntity<Map<String, String>> changeMemberRole(
             @AuthenticationPrincipal FirebasePrincipal principal,
@@ -91,7 +108,9 @@ public class BoardController {
         return ResponseEntity.ok(Map.of("message", "Role updated"));
     }
 
-    @Operation(summary = "Add Member by Email", description = "Invites a user to the board by email. If they have a vault account, they are added immediately.")
+    @Operation(summary = "Add Member by Email", description = "Invites a user to the board by email.")
+    @ApiResponse(responseCode = "200", description = "Member added successfully")
+    @ApiResponse(responseCode = "404", description = "User with given email not found")
     @PostMapping("/{boardId}/members/email")
     public ResponseEntity<Map<String, String>> addMemberByEmail(
             @AuthenticationPrincipal FirebasePrincipal principal,
@@ -104,6 +123,8 @@ public class BoardController {
     }
 
     @Operation(summary = "Remove Member", description = "Removes a user from the board. Requires OWNER role.")
+    @ApiResponse(responseCode = "200", description = "Member removed")
+    @ApiResponse(responseCode = "403", description = "Insufficient permissions")
     @DeleteMapping("/{boardId}/members/{userId}")
     public ResponseEntity<Map<String, String>> removeMember(
             @AuthenticationPrincipal FirebasePrincipal principal,

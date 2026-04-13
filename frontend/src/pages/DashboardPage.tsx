@@ -159,7 +159,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Profile Incomplete Prompt */}
-      {!dbUser?.admissionNo && (
+      {(!dbUser?.admissionNo && !dbUser?.phone && !dbUser?.githubUrl && !dbUser?.linkedinUrl && !dbUser?.bio) && (
         <div className="card animate-slide-up" style={{
           padding: '24px',
           marginBottom: 32,

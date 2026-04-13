@@ -1,6 +1,7 @@
 package com.curatix.vault.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,8 @@ import java.util.Map;
 @Tag(name = "Health", description = "System liveness and monitoring endpoints")
 public class HealthController {
 
-    @Operation(summary = "Health Check", description = "Returns the current status of the backend server. Used for monitoring and keeping free-tier instances alive.")
+    @Operation(summary = "Health Check", description = "Returns the current status of the backend server. Used for monitoring.")
+    @ApiResponse(responseCode = "200", description = "Server is up and running")
     @GetMapping
     public Map<String, String> healthCheck() {
         return Map.of(

@@ -6,6 +6,7 @@ import com.curatix.vault.entity.BoardEntity;
 import com.curatix.vault.entity.BoardMemberEntity;
 import com.curatix.vault.entity.MemberProfileEntity;
 import com.curatix.vault.entity.UserEntity;
+import com.curatix.vault.entity.Result;
 import com.curatix.vault.entity.BoardInvitationEntity;
 import com.curatix.vault.exception.ResourceNotFoundException;
 import com.curatix.vault.repository.BoardInvitationRepository;
@@ -13,6 +14,8 @@ import com.curatix.vault.repository.BoardMemberRepository;
 import com.curatix.vault.repository.BoardRepository;
 import com.curatix.vault.repository.MemberProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,14 +24,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * Service class for managing hackathon Boards.
- * Handles the complete lifecycle of a board including creation, metadata updates,
- * soft deletion, and team member management.
- */
 @Service
 @RequiredArgsConstructor
 public class BoardService {
+
+    private static final Logger log = LoggerFactory.getLogger(BoardService.class);
 
     private final BoardRepository boardRepository;
     private final BoardMemberRepository boardMemberRepository;
@@ -59,6 +59,7 @@ public class BoardService {
      */
     @Transactional
     public BoardEntity createBoard(String firebaseUid, CreateBoardRequest req) {
+        log.info("User {} is creating a new board: {}", firebaseUid, req.getName());
         UserEntity owner = userService.getByFirebaseUid(firebaseUid);
 
         BoardEntity board = BoardEntity.builder()
@@ -73,7 +74,7 @@ public class BoardService {
                 .teamName(req.getTeamName())
                 .problemStatement(req.getProblemStatement())
                 .projectIdea(req.getProjectIdea())
-                .result(req.getResult() != null ? req.getResult() : BoardEntity.Result.PARTICIPATED)
+                .result(req.getResult() != null ? req.getResult() : Result.PARTICIPATED)
                 .prize(req.getPrize())
                 .submissionUrl(req.getSubmissionUrl())
                 .repoUrls(req.getRepoUrls() != null ? req.getRepoUrls() : new java.util.ArrayList<>())

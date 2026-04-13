@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,6 +26,8 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class BoardFileService {
+
+    private static final Logger log = LoggerFactory.getLogger(BoardFileService.class);
 
     private final BoardFileRepository boardFileRepository;
     private final BoardRepository boardRepository;
@@ -61,6 +65,7 @@ public class BoardFileService {
     public BoardFileEntity uploadFile(String firebaseUid, Long boardId,
                                       MultipartFile file, String label,
                                       String fileType) throws IOException {
+        log.info("User {} uploading asset '{}' to board {}", firebaseUid, file.getOriginalFilename(), boardId);
         UserEntity user = userService.getByFirebaseUid(firebaseUid);
         permissionService.requireEditorOrAbove(boardId, user.getId());
 
@@ -106,6 +111,7 @@ public class BoardFileService {
      */
     @Transactional
     public void deleteFile(String firebaseUid, Long boardId, Long fileId) throws IOException {
+        log.warn("User {} deleting asset {} from board {}", firebaseUid, fileId, boardId);
         var user = userService.getByFirebaseUid(firebaseUid);
         permissionService.requireEditorOrAbove(boardId, user.getId());
 
