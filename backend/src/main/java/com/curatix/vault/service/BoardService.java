@@ -88,7 +88,7 @@ public class BoardService {
     @Transactional
     public BoardEntity updateBoard(String firebaseUid, Long boardId, CreateBoardRequest req) {
         UserEntity user = userService.getByFirebaseUid(firebaseUid);
-        permissionService.requireOwner(boardId, user.getId());
+        permissionService.requireEditorOrAbove(boardId, user.getId());
 
         BoardEntity board = boardRepository.findByIdAndDeletedFalse(boardId)
                 .orElseThrow(() -> new ResourceNotFoundException("Board not found: " + boardId));

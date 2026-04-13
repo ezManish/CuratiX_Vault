@@ -213,7 +213,7 @@ export default function BoardPage() {
         )}
         {activeTab === 'settings' && (
           <SettingsTab
-            boardId={bid} board={board} isOwner={isOwner}
+            boardId={bid} board={board} isOwner={isOwner} canEdit={canEdit}
             onDeleteBoard={handleDeleteBoard} onReload={loadBoard}
           />
         )}
@@ -865,7 +865,7 @@ function FilesTab({ boardId, files, canEdit, showUploadFile, setShowUploadFile, 
 }
 
 /* ==================== SETTINGS TAB ==================== */
-function SettingsTab({ boardId, board, isOwner, onDeleteBoard, onReload }: any) {
+function SettingsTab({ boardId, board, isOwner, canEdit, onDeleteBoard, onReload }: any) {
   const [inviteRole, setInviteRole] = useState('VIEWER');
   const [inviteLink, setInviteLink] = useState('');
   const [copied, setCopied] = useState(false);
@@ -928,7 +928,7 @@ function SettingsTab({ boardId, board, isOwner, onDeleteBoard, onReload }: any) 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, maxWidth: 800 }}>
       {/* Board/Project Details Form */}
-      {isOwner && (
+      {canEdit && (
         <div className="card" style={{ padding: 28 }}>
           <h3 style={{ fontSize: 18, fontWeight: 800, marginBottom: 24, color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
             <Settings size={20} /> Project Settings
