@@ -41,6 +41,11 @@ interface NewBoardState {
   projectIdea: string;
 }
 
+/**
+ * DashboardPage - The main landing area for authenticated users.
+ * Displays a grid of the user's boards and any pending invitations.
+ * Provides the interface for creating new project boards.
+ */
 export default function DashboardPage() {
   const { dbUser } = useAuthStore();
   const [boards, setBoards] = useState<Board[]>([]);

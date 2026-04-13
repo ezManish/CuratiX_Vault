@@ -3,6 +3,8 @@ package com.curatix.vault.controller;
 import com.curatix.vault.entity.UserEntity;
 import com.curatix.vault.security.FirebasePrincipal;
 import com.curatix.vault.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +17,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Authentication", description = "Endpoints for synchronizing Firebase users with the local database")
 public class AuthController {
 
     private final UserService userService;
@@ -24,6 +27,7 @@ public class AuthController {
      * Called on every login. Upserts Firebase user into MySQL.
      * Returns the user record (id, email, displayName, photoUrl).
      */
+    @Operation(summary = "Synchronize User Data", description = "Upserts a Firebase user into the local database and returns the current user profile.")
     @PostMapping("/sync")
     public ResponseEntity<Map<String, Object>> syncUser(
             @AuthenticationPrincipal FirebasePrincipal principal) {

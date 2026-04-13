@@ -13,6 +13,11 @@ import { createPortal } from 'react-dom';
 
 type TabId = 'overview' | 'members' | 'files' | 'settings';
 
+/**
+ * BoardPage - The central workspace for a specific project board.
+ * orchestrates navigation between Overview, Members, Files, and Settings tabs.
+ * Handles primary board data fetching and access control enforcement for UI elements.
+ */
 export default function BoardPage() {
   const { boardId } = useParams<{ boardId: string }>();
   const navigate = useNavigate();
@@ -222,7 +227,16 @@ export default function BoardPage() {
   );
 }
 
-/* ==================== OVERVIEW TAB ==================== */
+/**
+ * OverviewTab Component
+ * Displays key project metrics, mission statement, and external resource links.
+ * 
+ * @param {Object} props
+ * @param {Object} props.board - The board metadata object
+ * @param {Array} props.members - List of board members
+ * @param {Array} props.files - List of board files
+ * @param {Function} props.setActiveTab - Callback to switch between tabs
+ */
 function OverviewTab({ board, members, files, setActiveTab }: any) {
   const stats = [
     { icon: Users, label: 'Members', value: members.length, color: '#6366f1', tab: 'members' as TabId },
@@ -407,7 +421,22 @@ function OverviewTab({ board, members, files, setActiveTab }: any) {
   );
 }
 
-/* ==================== MEMBERS TAB ==================== */
+/**
+ * MembersTab Component
+ * Manages the team list, invitations, and data exports.
+ * 
+ * @param {Object} props
+ * @param {number} props.boardId - Unique ID of the current board
+ * @param {Array} props.members - Current list of board members
+ * @param {boolean} props.canEdit - Whether the current user has write access
+ * @param {string} props.searchQuery - Current search filter
+ * @param {Function} props.setSearchQuery - Callback to update search filter
+ * @param {boolean} props.showAddMember - Modal toggle state
+ * @param {Function} props.setShowAddMember - Callback to toggle modal
+ * @param {Function} props.onExportCsv - Callback to trigger CSV download
+ * @param {Function} props.onReload - Callback to refresh board data
+ * @param {Object} props.dbUser - Currently authenticated global user
+ */
 function MembersTab({
   boardId, members, canEdit, searchQuery, setSearchQuery,
   showAddMember, setShowAddMember, onExportCsv, onReload,
@@ -671,7 +700,18 @@ function MembersTab({
 }
 
 
-/* ==================== FILES TAB ==================== */
+/**
+ * FilesTab Component
+ * Handles project asset management including uploads to Cloudinary and downloads.
+ * 
+ * @param {Object} props
+ * @param {number} props.boardId - ID of the board
+ * @param {Array} props.files - List of files currently in the vault
+ * @param {boolean} props.canEdit - Permission flag for uploads/deletes
+ * @param {boolean} props.showUploadFile - Modal toggle state
+ * @param {Function} props.setShowUploadFile - Toggle callback
+ * @param {Function} props.onReload - Callback to fetch fresh data
+ */
 function FilesTab({ boardId, files, canEdit, showUploadFile, setShowUploadFile, onReload }: any) {
   const [file, setFile] = useState<File | null>(null);
   const [label, setLabel] = useState('');
@@ -864,7 +904,18 @@ function FilesTab({ boardId, files, canEdit, showUploadFile, setShowUploadFile, 
   );
 }
 
-/* ==================== SETTINGS TAB ==================== */
+/**
+ * SettingsTab Component
+ * Allows configuration of board metadata, multi-repo URLs, and invitation link generation.
+ * 
+ * @param {Object} props
+ * @param {number} props.boardId - ID of the board
+ * @param {Object} props.board - Current board metadata
+ * @param {boolean} props.isOwner - Whether the current user is the board owner
+ * @param {boolean} props.canEdit - Permission flag for metadata updates
+ * @param {Function} props.onDeleteBoard - Callback to trigger hard delete
+ * @param {Function} props.onReload - Callback to refresh data after updates
+ */
 function SettingsTab({ boardId, board, isOwner, canEdit, onDeleteBoard, onReload }: any) {
   const [inviteRole, setInviteRole] = useState('VIEWER');
   const [inviteLink, setInviteLink] = useState('');

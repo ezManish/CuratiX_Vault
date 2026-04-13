@@ -21,6 +21,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for managing hackathon Boards.
+ * Handles the complete lifecycle of a board including creation, metadata updates,
+ * soft deletion, and team member management.
+ */
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -33,11 +38,25 @@ public class BoardService {
     private final UserService userService;
     private final MemberProfileService memberProfileService;
 
+    /**
+     * Retrieves all boards where the user is currently a member.
+     * 
+     * @param firebaseUid The unique identifier of the user from Firebase Auth.
+     * @return A list of BoardEntity objects associated with the user.
+     */
     public List<BoardEntity> getBoardsForUser(String firebaseUid) {
         UserEntity user = userService.getByFirebaseUid(firebaseUid);
         return boardRepository.findAllByMemberUserId(user.getId());
     }
 
+    /**
+     * Creates a new board and automatically joins the creator as the OWNER.
+     * Also triggers the initial synchronization of the creator's board-specific profile.
+     * 
+     * @param firebaseUid The unique identifier of the creator.
+     * @param req The request DTO containing board metadata.
+     * @return The newly created and persisted BoardEntity.
+     */
     @Transactional
     public BoardEntity createBoard(String firebaseUid, CreateBoardRequest req) {
         UserEntity owner = userService.getByFirebaseUid(firebaseUid);
@@ -78,6 +97,14 @@ public class BoardService {
         return board;
     }
 
+    /**
+     * Retrieves details for a specific board, validating that the user has access.
+     * 
+     * @param firebaseUid The unique identifier of the requesting user.
+     * @param boardId The ID of the board to retrieve.
+     * @return The requested BoardEntity.
+     * @throws ResourceNotFoundException if the board does not exist or is deleted.
+     */
     public BoardEntity getBoard(String firebaseUid, Long boardId) {
         UserEntity user = userService.getByFirebaseUid(firebaseUid);
         permissionService.getRole(boardId, user.getId()); // Throws if not member
@@ -85,6 +112,14 @@ public class BoardService {
                 .orElseThrow(() -> new ResourceNotFoundException("Board not found: " + boardId));
     }
 
+    /**
+     * Updates board metadata. Validates that the user has at least EDITOR permissions.
+     * 
+     * @param firebaseUid The unique identifier of the user performing the update.
+     * @param boardId The ID of the board to update.
+     * @param req The new metadata for the board.
+     * @return The updated and persisted BoardEntity.
+     */
     @Transactional
     public BoardEntity updateBoard(String firebaseUid, Long boardId, CreateBoardRequest req) {
         UserEntity user = userService.getByFirebaseUid(firebaseUid);
@@ -127,6 +162,14 @@ public class BoardService {
         boardRepository.save(board);
     }
 
+    /**
+     * Retrieves all members of a board, including their roles and board-specific profiles.
+     * Uses optimized batch fetching to prevent N+1 query problems.
+     * 
+     * @param firebaseUid The unique identifier of the requesting user.
+     * @param boardId The ID of the board.
+     * @return A list of BoardMemberResponse DTOs.
+     */
     public List<BoardMemberResponse> getBoardMembers(String firebaseUid, Long boardId) {
         UserEntity user = userService.getByFirebaseUid(firebaseUid);
         permissionService.getRole(boardId, user.getId());
@@ -174,6 +217,15 @@ public class BoardService {
         boardMemberRepository.save(bm);
     }
 
+    /**
+     * Removes a member from the board. 
+     * Also deletes their board-specific profile and any pending invitations.
+     * Requires OWNER permission.
+     * 
+     * @param firebaseUid The unique identifier of the user performing the removal.
+     * @param boardId The ID of the board.
+     * @param targetUserId The user ID of the member to be removed.
+     */
     @Transactional
     public void removeMember(String firebaseUid, Long boardId, Long targetUserId) {
         UserEntity caller = userService.getByFirebaseUid(firebaseUid);
@@ -205,6 +257,16 @@ public class BoardService {
         }
     }
 
+    /**
+     * Invites a new member to the board via email.
+     * If an invitation already exists, it resets the status to PENDING.
+     * Requires OWNER permission.
+     * 
+     * @param firebaseUid The unique identifier of the inviter.
+     * @param boardId The ID of the board.
+     * @param email The recipient's email address.
+     * @param role The role to grant upon acceptance.
+     */
     @Transactional
     public void addMemberByEmail(String firebaseUid, Long boardId, String email, BoardMemberEntity.Role role) {
         UserEntity caller = userService.getByFirebaseUid(firebaseUid);
@@ -248,6 +310,14 @@ public class BoardService {
         return boardInvitationRepository.findAllByRecipientEmailIgnoreCaseAndStatus(user.getEmail(), BoardInvitationEntity.Status.PENDING);
     }
 
+    /**
+     * Processes a user's response to an invitation.
+     * If accepted, creates a board membership and synchronizes the user's profile.
+     * 
+     * @param firebaseUid The unique identifier of the user responding.
+     * @param inviteId The ID of the invitation record.
+     * @param accept Whether the user accepts (true) or declines (false) the invite.
+     */
     @Transactional
     public void respondToInvitation(String firebaseUid, Long inviteId, boolean accept) {
         UserEntity user = userService.getByFirebaseUid(firebaseUid);

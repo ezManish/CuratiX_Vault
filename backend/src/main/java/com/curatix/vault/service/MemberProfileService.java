@@ -18,6 +18,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service class for managing board-specific Member Profiles.
+ * Each user can have a unique profile card for each board they join.
+ * Handles synchronization from global identity, manual updates, and Cloudinary photo uploads.
+ */
 @Service
 @RequiredArgsConstructor
 public class MemberProfileService {
@@ -28,6 +33,14 @@ public class MemberProfileService {
     private final UserService userService;
     private final Cloudinary cloudinary;
 
+    /**
+     * Creates or updates a board-specific profile by pulling data from the user's global identity.
+     * This is typically called when a user joins a board or when they update their global profile.
+     * 
+     * @param board The board for which the profile is being synced.
+     * @param user The user whose data is being synced.
+     * @return The updated MemberProfileEntity.
+     */
     @Transactional
     public MemberProfileEntity syncFromUser(BoardEntity board, com.curatix.vault.entity.UserEntity user) {
         // Find existing profile for this user on this board, or create new
@@ -59,6 +72,13 @@ public class MemberProfileService {
         }
     }
 
+    /**
+     * Retrieves all member profiles for a specific board.
+     * 
+     * @param firebaseUid The unique identifier of the requesting user.
+     * @param boardId The ID of the board.
+     * @return A list of MemberProfileEntity objects.
+     */
     public List<MemberProfileEntity> getProfiles(String firebaseUid, Long boardId) {
         var user = userService.getByFirebaseUid(firebaseUid);
         permissionService.getRole(boardId, user.getId());
@@ -96,6 +116,16 @@ public class MemberProfileService {
         return memberProfileRepository.save(profile);
     }
 
+    /**
+     * Updates an existing member profile's detail (bio, skills, social links, etc.).
+     * Requires EDITOR permission or above on the board.
+     * 
+     * @param firebaseUid The unique identifier of the user performing the update.
+     * @param boardId The ID of the board.
+     * @param profileId The ID of the profile to update.
+     * @param req The new profile data.
+     * @return The updated MemberProfileEntity.
+     */
     @Transactional
     public MemberProfileEntity updateProfile(String firebaseUid, Long boardId, Long profileId,
             MemberProfileRequest req) {
@@ -155,6 +185,17 @@ public class MemberProfileService {
         memberProfileRepository.delete(profile);
     }
 
+    /**
+     * Uploads a new profile photo to Cloudinary and updates the profile's URL.
+     * Automatically removes the old photo from Cloudinary if it exists.
+     * 
+     * @param firebaseUid The unique identifier of the user performing the upload.
+     * @param boardId The ID of the board.
+     * @param profileId The ID of the profile.
+     * @param file The image file to upload.
+     * @return The updated MemberProfileEntity with the new photo URL.
+     * @throws IOException if the file upload fails.
+     */
     @Transactional
     public MemberProfileEntity uploadProfilePhoto(String firebaseUid, Long boardId, Long profileId,
             MultipartFile file) throws IOException {

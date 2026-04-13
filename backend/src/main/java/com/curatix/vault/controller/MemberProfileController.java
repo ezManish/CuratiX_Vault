@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,10 +21,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/boards/{boardId}/profiles")
 @RequiredArgsConstructor
+@Tag(name = "Member Profiles", description = "Endpoints for managing board-specific member profiles (bios, skills, social links)")
 public class MemberProfileController {
 
     private final MemberProfileService memberProfileService;
 
+    @Operation(summary = "List Board Profiles", description = "Retrieves all member profiles associated with a specific board.")
     @GetMapping
     public ResponseEntity<List<MemberProfileEntity>> getProfiles(
             @AuthenticationPrincipal FirebasePrincipal principal,
@@ -30,6 +34,7 @@ public class MemberProfileController {
         return ResponseEntity.ok(memberProfileService.getProfiles(principal.getUid(), boardId));
     }
 
+    @Operation(summary = "Add/Update Own Profile", description = "Manually adds or synchronizes a profile for the user on a specific board.")
     @PostMapping
     public ResponseEntity<MemberProfileEntity> addProfile(
             @AuthenticationPrincipal FirebasePrincipal principal,
@@ -39,6 +44,7 @@ public class MemberProfileController {
                 .body(memberProfileService.addProfile(principal.getUid(), boardId, req));
     }
 
+    @Operation(summary = "Edit Profile Info", description = "Updates fields like bio, skills, and social links for a specific board profile.")
     @PutMapping("/{profileId}")
     public ResponseEntity<MemberProfileEntity> updateProfile(
             @AuthenticationPrincipal FirebasePrincipal principal,
@@ -49,6 +55,7 @@ public class MemberProfileController {
                 memberProfileService.updateProfile(principal.getUid(), boardId, profileId, req));
     }
 
+    @Operation(summary = "Delete Profile", description = "Deletes a specific member profile. Usually used when removing a member from a board.")
     @DeleteMapping("/{profileId}")
     public ResponseEntity<Map<String, String>> deleteProfile(
             @AuthenticationPrincipal FirebasePrincipal principal,
@@ -58,6 +65,7 @@ public class MemberProfileController {
         return ResponseEntity.ok(Map.of("message", "Profile deleted"));
     }
 
+    @Operation(summary = "Upload Profile Photo", description = "Uploads a board-specific profile photo to Cloudinary.")
     @PostMapping(value = "/{profileId}/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MemberProfileEntity> uploadPhoto(
             @AuthenticationPrincipal FirebasePrincipal principal,

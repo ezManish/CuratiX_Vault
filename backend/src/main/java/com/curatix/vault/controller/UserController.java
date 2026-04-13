@@ -5,6 +5,8 @@ import com.curatix.vault.dto.UserUpdateRequest;
 import com.curatix.vault.entity.UserEntity;
 import com.curatix.vault.security.FirebasePrincipal;
 import com.curatix.vault.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,16 +15,19 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@Tag(name = "Users", description = "Endpoints for managing global user identity and professional profile sync")
 public class UserController {
 
     private final UserService userService;
 
+    @Operation(summary = "Get My Global Profile", description = "Retrieves the authenticated user's global profile data (shared across all boards).")
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getMyProfile(@AuthenticationPrincipal FirebasePrincipal principal) {
         UserEntity user = userService.getByFirebaseUid(principal.getUid());
         return ResponseEntity.ok(toResponse(user));
     }
 
+    @Operation(summary = "Update Global Profile", description = "Updates the user's global professional data and triggers a sync across all board-specific profiles.")
     @PutMapping("/me")
     public ResponseEntity<UserResponse> updateMyProfile(
             @AuthenticationPrincipal FirebasePrincipal principal,

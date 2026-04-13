@@ -17,6 +17,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service class for managing file uploads and storage.
+ * Interfaces with Cloudinary to store project assets like PRDs, pitch decks, and media.
+ */
 @Service
 @RequiredArgsConstructor
 public class BoardFileService {
@@ -27,12 +31,32 @@ public class BoardFileService {
     private final UserService userService;
     private final Cloudinary cloudinary;
 
+    /**
+     * Retrieves all files uploaded to a specific board.
+     * 
+     * @param firebaseUid The unique identifier of the requesting user.
+     * @param boardId The ID of the board.
+     * @return A list of BoardFileEntity objects.
+     */
     public List<BoardFileEntity> getFiles(String firebaseUid, Long boardId) {
         var user = userService.getByFirebaseUid(firebaseUid);
         permissionService.getRole(boardId, user.getId());
         return boardFileRepository.findAllByBoardIdOrderByUploadedAtDesc(boardId);
     }
 
+    /**
+     * Uploads a file to Cloudinary and registers it in the board's vault.
+     * Automatically determines the resource type (image, video, raw) for Cloudinary.
+     * Requires EDITOR role or above.
+     * 
+     * @param firebaseUid The unique identifier of the uploader.
+     * @param boardId The ID of the board.
+     * @param file The file to upload.
+     * @param label A human-readable label for the file.
+     * @param fileType The category of the file (e.g. PRD, DESIGN).
+     * @return The newly created and persisted BoardFileEntity.
+     * @throws IOException if the file upload fails.
+     */
     @Transactional
     public BoardFileEntity uploadFile(String firebaseUid, Long boardId,
                                       MultipartFile file, String label,
@@ -71,6 +95,15 @@ public class BoardFileService {
         return boardFileRepository.save(boardFile);
     }
 
+    /**
+     * Deletes a file from the vault and removes the asset from Cloudinary.
+     * Requires EDITOR role or above.
+     * 
+     * @param firebaseUid The unique identifier of the user performing the deletion.
+     * @param boardId The ID of the board.
+     * @param fileId The ID of the file to delete.
+     * @throws IOException if Cloudinary asset destruction fails.
+     */
     @Transactional
     public void deleteFile(String firebaseUid, Long boardId, Long fileId) throws IOException {
         var user = userService.getByFirebaseUid(firebaseUid);

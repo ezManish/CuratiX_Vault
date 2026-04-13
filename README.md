@@ -1,115 +1,134 @@
-# CuratiX Vault
-### The Command Center for Hackathon Teams. One Board = One Project.
+# ◈ CuratiX Vault
 
-[![Backend](https://img.shields.io/badge/Backend-Render-brightgreen)](https://curatix-vault.onrender.com/swagger-ui/index.html)
-[![Frontend](https://img.shields.io/badge/Frontend-Vercel-black)](https://curatix.co.in)
-[![Domain](https://img.shields.io/badge/Domain-GoDaddy-blue)](https://curatix.co.in)
-[![Java](https://img.shields.io/badge/Stack-Java_21-orange)](https://adoptium.net/)
-[![React](https://img.shields.io/badge/Stack-React_19-blue)](https://react.dev/)
-
-CuratiX Vault is an enterprise-grade workspace built specifically for hackathon teams. It eliminates the chaos of scattered files, unclear ownership, and messy submissions by organizing team data, project assets, roles, and logistics into a single structured system.
-
-**Live Production Site:** https://curatix.co.in/  
-**API Documentation:** https://curatix-vault.onrender.com/swagger-ui/index.html
+**Elevate your hackathon team organization.**  
+CuratiX Vault is a premium, lightweight project management platform designed specifically for hackathon teams to consolidate member profiles, track project assets, and maintain a historical record of their innovation journey.
 
 ---
 
-## Workflow Overview
+## Quick Links
 
-1. **Initialize Project**: Create a dedicated Board for your hackathon project.
-2. **Onboard Team**: Invite teammates via secure, expiring links or direct email invitations.
-3. **Define Scope**: Centralize problem statements, tech stacks, and critical submission links.
-4. **Manage Roles**: Assign Owner, Editor, or Viewer permissions to maintain data integrity.
-5. **Centralize Assets**: Upload design patterns, pitch decks, and codebases to a unified vault.
-6. **Export & Submit**: Generate structured CSV reports for hackathon submission portals.
+- **Live Platform**: [curatix.co.in](https://www.curatix.co.in/)
+- **Mirror Link**: [curatix-vault.vercel.app](https://curatix-vault.vercel.app)
+- **Interactive API Docs**: [Swagger UI](https://curatix-vault.onrender.com/swagger-ui/index.html)
+- **Backend API**: [curatix-vault.onrender.com](https://curatix-vault.onrender.com)
 
 ---
 
-## Technical Features
+## System Architecture
 
-### Board-Based Workspaces
-Every project operates within its own isolation. Store comprehensive project details, track lifecycle milestones from participation to winning, and maintain a permanent record of hackathon achievements.
+CuratiX Vault uses a modern, stateless architecture to ensure scalability and ease of deployment.
 
-### Identity Synchronization
-Configure your core identity — including university details, enrollment data, and social professional links (GitHub, LinkedIn) — a single time. Your profile synchronizes automatically across every board you join within the ecosystem.
-
-### Fine-Grained Access Control
-Implement Role-Based Access Control (RBAC) with Owner, Editor, and Viewer permissions. This ensures that sensitive project data is only modifiable by authorized team members.
-
-### Resource Vault
-Securely store and share critical project assets including architecture diagrams, presentation decks, and documentation. Powered by Cloudinary for high-availability storage.
-
-### Data Intelligence & Export
-Instant generation of team profiles and project metadata as structured CSV files. Designed to meet the requirements of major hackathon submission platforms.
-
----
-
-## API Reference
-
-Comprehensive API documentation is available via the interactive Swagger UI:  
-https://curatix-vault.onrender.com/swagger-ui/index.html
-
-### Core Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | /api/boards | Retrieve all accessible project boards |
-| POST | /api/boards/{id}/profiles | Synchronize or update regional member profiles |
-| POST | /api/boards/{id}/files | Upload assets to the project vault |
-| POST | /api/invite/join/{token} | Authenticate and join a team via token |
-| GET | /api/health | System heartbeat and monitoring (24/7 Keep-Alive) |
+```mermaid
+graph TD
+    User((Developer)) -->|React + Vite| Frontend[Frontend UI]
+    Frontend -->|Stateless API| Backend[Spring Boot API]
+    
+    subgraph Security
+        Backend -->|Verify Token| Firebase[Firebase Auth]
+    end
+    
+    subgraph Storage
+        Backend -->|Relational Data| MySQL[(MySQL)]
+        Backend -->|Asset Hosting| Cloudinary[Cloudinary]
+    end
+    
+    style User fill:#6366f1,color:#fff
+    style Frontend fill:#10b981,color:#fff
+    style Backend fill:#3b82f6,color:#fff
+    style MySQL fill:#f59e0b,color:#fff
+    style Cloudinary fill:#ec4899,color:#fff
+```
 
 ---
 
-## Technology Stack
+## Key Features
 
-### Backend Infrastructure
-- **Language**: Java 21 LTS
-- **Framework**: Spring Boot 3.4.4
-- **Security**: Firebase Admin SDK (Stateless JWT Authentication)
-- **Migrations**: Flyway (Automated DB versioning)
-- **Database**: MySQL 8.x
-
-### Frontend Architecture
-- **Framework**: React 19 (TypeScript)
-- **Build Tool**: Vite
-- **State Management**: Zustand (Auth) and React Query (Server Sync)
-- **Icons**: Lucide
-- **UI Feedback**: React Hot Toast
+- **Dynamic Project Boards**: Create dedicated spaces for each hackathon with custom colors, emojis, and metadata.
+- **Role-Based Collaboration**: Multi-tier permission system (OWNER, EDITOR, VIEWER) for secure team management.
+- **Smart Member Cards**: Automatically syncs user professional data across all boards while allowing board-specific bios and skills.
+- **The Vault (Asset Manager)**: Centralized storage for Pitch Decks, PRDs, and Codebase links with direct Cloudinary integration.
+- **Insightful Exports**: One-click CSV exports for member data (Admission/Enrollment numbers) for quick form filling.
+- **Invitation System**: Secure, shareable UUID tokens for quick team onboarding.
 
 ---
 
-## Local Development
+## Quick Start (Local Development)
+
+### Prerequisites
+
+- **Java 17+**
+- **Node.js 18+**
+- **MySQL 8.0**
+- **Firebase Project** (for Auth)
+- **Cloudinary Account** (for File Uploads)
 
 ### Backend Setup
-1. Navigate to the `backend` directory.
-2. Add `firebase-adminsdk.json` to the `src/main/resources` folder.
-3. Configure your local `.env` with Database, Firebase, and Cloudinary credentials.
-4. Execute `mvn spring-boot:run`.
+
+1. Configure environment in `backend/src/main/resources/application.properties`:
+   ```properties
+   spring.datasource.url=jdbc:mysql://localhost:3306/curatix
+   spring.datasource.username=YOUR_USER
+   spring.datasource.password=YOUR_PASS
+   
+   CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
+   ```
+2. Place your `firebase-service-account.json` in `backend/src/main/resources/`.
+3. Run with Maven:
+   ```bash
+   cd backend
+   mvn spring-boot:run
+   ```
 
 ### Frontend Setup
-1. Navigate to the `frontend` directory.
-2. Install dependencies: `npm install`.
-3. Create a `.env` file with your Firebase public keys.
-4. Set `VITE_API_BASE_URL=http://localhost:8080`.
-5. Execute `npm run dev`.
+
+1. Install dependencies:
+   ```bash
+   cd frontend
+   npm install
+   ```
+2. Configure `.env`:
+   ```env
+   VITE_FIREBASE_CONFIG=...
+   VITE_API_BASE_URL=http://localhost:8080
+   ```
+3. Launch:
+   ```bash
+   npm run dev
+   ```
 
 ---
 
-## Operational Notes
+## API Authentication Guide
 
-**Cold Starts**: The backend is hosted on Render's free tier. Initial requests may experience a 30-60 second latency as the instance initializes. To maintain high availability, use a service like cron-job.org to ping the `/api/health` endpoint every 10 minutes.
+All protected endpoints require a Bearer Token in the `Authorization` header.
+
+### 1. Retrieve ID Token (Frontend Console)
+If you are logged into the web app, you can get your token via:
+```javascript
+// Run in browser console on CuratiX dashboard
+await (await import('firebase/auth')).getAuth().currentUser.getIdToken();
+```
+
+### 2. Make Authenticated Requests
+```bash
+curl -X GET "http://localhost:8080/api/boards" \
+     -H "Authorization: Bearer <YOUR_ID_TOKEN>"
+```
+
+> [!TIP]
+> **Swagger UI** is available at `/swagger-ui/index.html` for interactive API exploration.
 
 ---
 
-## Future Roadmap
+## Tech Stack
 
-The following architectural enhancements are planned for future releases:
-- AI-Driven PRD Generation: Integrated project requirement analysis.
-- Real-Time Team Collaboration: Integrated messaging and live updates.
-- Deep Repository Integration: Live commit tracking and PR synchronization.
-- Automated Team Matching: Skill-based gap analysis and teammate suggestions.
+- **Frontend**: React 18, Vite, Tailwind CSS (minimal), Lucide Icons, Zustand (State Management).
+- **Backend**: Java 17, Spring Boot 3.2, Spring Security, Hibernate/JPA.
+- **Database**: MySQL 8.0 with Flyway migrations.
+- **Infrastructure**: Cloudinary (Storage), Firebase (Auth/OIDC).
 
 ---
 
-*Authored by the CuratiX Development Team.*
+## Contributing
+
+We welcome professional contributions. Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for our architectural guidelines and code standards.

@@ -6,6 +6,13 @@ import com.curatix.vault.repository.BoardMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for Role-Based Access Control (RBAC) within boards.
+ * Defines the security hierarchy:
+ * - OWNER: Full control (Delete board, manage members, edit settings)
+ * - EDITOR: Collaborative control (Upload files, edit project details)
+ * - VIEWER: Read-only access
+ */
 @Service
 @RequiredArgsConstructor
 public class PermissionService {
@@ -13,7 +20,12 @@ public class PermissionService {
     private final BoardMemberRepository boardMemberRepository;
 
     /**
-     * Returns the current user's role in the board, or throws if not a member.
+     * Retrieves the role of a user in a specific board.
+     * 
+     * @param boardId The ID of the board.
+     * @param userId The ID of the user.
+     * @return The User's role (OWNER, EDITOR, or VIEWER).
+     * @throws AccessDeniedException if the user is not a member of the board.
      */
     public BoardMemberEntity.Role getRole(Long boardId, Long userId) {
         return boardMemberRepository.findByBoardIdAndUserId(boardId, userId)
@@ -22,7 +34,11 @@ public class PermissionService {
     }
 
     /**
-     * Ensures user is OWNER or EDITOR — throws 403 otherwise.
+     * Ensures the user has EDITOR permissions or higher.
+     * 
+     * @param boardId The ID of the board.
+     * @param userId The ID of the user.
+     * @throws AccessDeniedException if the user has only VIEWER access or is not a member.
      */
     public void requireEditorOrAbove(Long boardId, Long userId) {
         BoardMemberEntity.Role role = getRole(boardId, userId);
@@ -32,7 +48,11 @@ public class PermissionService {
     }
 
     /**
-     * Ensures user is OWNER — throws 403 otherwise.
+     * Ensures the user is the OWNER of the board.
+     * 
+     * @param boardId The ID of the board.
+     * @param userId The ID of the user.
+     * @throws AccessDeniedException if the user is not the board owner.
      */
     public void requireOwner(Long boardId, Long userId) {
         BoardMemberEntity.Role role = getRole(boardId, userId);

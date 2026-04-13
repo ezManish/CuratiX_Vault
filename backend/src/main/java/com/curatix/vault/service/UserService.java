@@ -7,6 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Service class for managing global User identity.
+ * Handles synchronization between Firebase Authentication and the local database,
+ * as well as global profile updates that propagate to board-specific member cards.
+ */
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -23,8 +28,11 @@ public class UserService {
     }
 
     /**
-     * Upserts a Firebase user into the MySQL users table.
-     * Called on every login via /api/auth/sync.
+     * Synchronizes a user from Firebase Auth into the local database.
+     * Upserts a UserEntity based on the Firebase uid.
+     * 
+     * @param principal The authenticated principal containing Firebase user data.
+     * @return The synchronized UserEntity.
      */
     @Transactional
     public UserEntity syncUser(FirebasePrincipal principal) {
@@ -45,12 +53,28 @@ public class UserService {
                 ));
     }
 
+    /**
+     * Fetches a UserEntity by their unique Firebase identifier.
+     * 
+     * @param uid The Firebase unique ID string.
+     * @return The UserEntity if found.
+     * @throws ResourceNotFoundException if no user is synchronized yet.
+     */
     public UserEntity getByFirebaseUid(String uid) {
         return userRepository.findByFirebaseUid(uid)
                 .orElseThrow(() -> new com.curatix.vault.exception.ResourceNotFoundException(
                         "User not found. Please call /api/auth/sync first."));
     }
 
+    /**
+     * Updates the user's global professional identity.
+     * This update automatically propagates changes to all board-specific member profiles
+     * to ensure data consistency across the platform.
+     * 
+     * @param uid The Firebase unique ID of the user.
+     * @param req The update request DTO.
+     * @return The updated and persisted UserEntity.
+     */
     @Transactional
     public UserEntity updateProfile(String uid, com.curatix.vault.dto.UserUpdateRequest req) {
         UserEntity user = getByFirebaseUid(uid);

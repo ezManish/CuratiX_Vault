@@ -5,6 +5,8 @@ import com.curatix.vault.security.FirebasePrincipal;
 import com.curatix.vault.service.MemberProfileService;
 import com.curatix.vault.service.PermissionService;
 import com.curatix.vault.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -24,14 +26,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/boards/{boardId}/export")
 @RequiredArgsConstructor
+@Tag(name = "Data Export", description = "Endpoints for exporting board data in various formats like CSV")
 public class CsvExportController {
 
         private final MemberProfileService memberProfileService;
         private final PermissionService permissionService;
         private final UserService userService;
 
-        @GetMapping("/csv")
-        public ResponseEntity<byte[]> exportCsv(
+    @Operation(summary = "Export Members to CSV", description = "Generates a CSV file containing all member profiles for a specific board. Useful for hackathon submissions.")
+    @GetMapping("/csv")
+    public ResponseEntity<byte[]> exportCsv(
                         @AuthenticationPrincipal FirebasePrincipal principal,
                         @PathVariable Long boardId) throws IOException {
 
